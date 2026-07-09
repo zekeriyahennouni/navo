@@ -58,9 +58,10 @@ Beginne, indem du an das anknüpfst, was die Person geschrieben hat, und stelle
 genau eine gezielte nächste Frage.
 `.trim();
 
-// ---- Statisches Frontend ausliefern (optional) -------------------------------
-// Lege deine index.html in den Ordner /public, dann hostet dieser Server beides.
-app.use(express.static(path.join(__dirname, "public")));
+// ---- Statisches Frontend ausliefern -----------------------------------------
+// Deine index.html liegt einfach direkt neben dieser Datei (im Ordner navo).
+// Kein Unterordner noetig.
+app.use(express.static(__dirname));
 
 // ---- KI-Endpunkt -------------------------------------------------------------
 app.post("/api/chat", async (req, res) => {
