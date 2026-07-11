@@ -408,6 +408,26 @@
   .rb-new{ border:1px dashed var(--gold-deep); background:var(--gold-soft); color:var(--gold-deep); border-radius:999px; padding:7px 14px; font-size:.84rem; font-weight:600; cursor:pointer; white-space:nowrap; }
   .rb-new:hover{ background:#EED9B0; }
 
+  /* Routen-Karte (Journey-Map) */
+  .journeymap{ display:flex; align-items:stretch; gap:0; background:var(--card); border:1px solid var(--line); border-radius:16px; padding:10px 8px; margin:4px 0 20px; box-shadow:var(--shadow); overflow-x:auto; }
+  .jm-node{ position:relative; flex:1 0 auto; min-width:104px; display:flex; flex-direction:column; align-items:center; gap:6px; background:transparent; border:none; padding:10px 6px 8px; cursor:pointer; border-radius:12px; transition:background .15s ease; }
+  .jm-node:hover{ background:var(--paper-2); }
+  .jm-node::before{ content:""; position:absolute; top:25px; left:-50%; width:100%; height:2px; background:var(--line); z-index:0; }
+  .jm-node:first-child::before{ display:none; }
+  .jm-dot{ position:relative; z-index:1; width:32px; height:32px; border-radius:50%; background:var(--card); border:2px solid var(--line); color:var(--ink-faint); display:flex; align-items:center; justify-content:center; font-family:'Fraunces',serif; font-weight:700; font-size:.92rem; transition:.2s ease; }
+  .jm-name{ font-size:.79rem; font-weight:600; color:var(--ink-faint); text-align:center; line-height:1.2; }
+  .jm-prog{ font-family:'IBM Plex Mono',monospace; font-size:.66rem; color:var(--ink-faint); }
+  .jm-node.done .jm-dot{ background:var(--gold); border-color:var(--gold); color:#1C1405; }
+  .jm-node.done::before{ background:var(--gold); }
+  .jm-node.done .jm-name{ color:var(--ink-soft); }
+  .jm-node.current .jm-dot{ background:var(--green); border-color:var(--green); color:#F0EDE3; box-shadow:0 0 0 5px var(--green-soft); }
+  .jm-node.current .jm-name{ color:var(--green); }
+  .jm-node.current .jm-prog{ color:var(--green); }
+
+  .firststep.fs-done{ border-left-color:var(--ok); background:var(--green-soft); }
+  .firststep.fs-done .fs-kick{ color:var(--ok); }
+  .firststep.fs-done .fs-kick::before{ content:"✓"; }
+
   /* Hinweis bei Nicht-Idee */
   .noidea{ max-width:560px; margin:20px auto 40px; text-align:center; background:var(--card); border:1px solid var(--line); border-radius:20px; padding:40px 30px; box-shadow:var(--shadow); }
   .noidea .ni-mark{ display:inline-flex; align-items:center; justify-content:center; width:52px; height:52px; border-radius:50%; border:2px solid var(--gold); color:var(--gold-deep); font-size:1.1rem; margin-bottom:18px; }
@@ -452,6 +472,39 @@
   .fs-time-val{ font-family:'Fraunces',serif; font-weight:700; font-size:1.15rem; color:var(--green); margin-top:2px; line-height:1.15; }
   @media(max-width:560px){ .firststep{ flex-direction:column; gap:12px; } .fs-time{ flex-direction:row; gap:8px; align-items:center; border-left:none; border-top:1px dashed var(--line); padding-left:0; padding-top:12px; text-align:left; } }
 
+  /* ---------- Dezente Lebendigkeit ---------- */
+  /* Routenlinie im Hero fließt sanft (wie live-Navigation) */
+  @keyframes routeflow{ to{ stroke-dashoffset:-130; } }
+  .routeArt path{ animation:routeflow 7s linear infinite; }
+
+  /* Etappen blenden beim Aufbau nacheinander ein */
+  @keyframes riseIn{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:none; } }
+  .etappe{ opacity:0; animation:riseIn .5s ease forwards; }
+
+  /* Cockpit erscheint weich, wenn die Route fertig ist */
+  @keyframes softIn{ from{ opacity:0; transform:translateY(8px); } to{ opacity:1; transform:none; } }
+  #cockpitBody.reveal{ animation:softIn .5s ease; }
+
+  /* Aktuelle Etappe in der Routen-Karte "atmet" */
+  @keyframes breathe{ 0%,100%{ box-shadow:0 0 0 4px var(--green-soft); } 50%{ box-shadow:0 0 0 9px var(--green-soft); } }
+  .jm-node.current .jm-dot{ animation:breathe 2.6s ease-in-out infinite; }
+
+  /* navo-Avatar pulsiert ganz leicht */
+  @keyframes softpulse{ 0%,100%{ opacity:.85; } 50%{ opacity:1; } }
+  .brief-avatar{ animation:softpulse 3s ease-in-out infinite; }
+
+  /* Fortschrittsbalken schimmert leise */
+  .pbar i{ position:relative; overflow:hidden; }
+  .pbar i::after{ content:""; position:absolute; inset:0; background:linear-gradient(90deg,transparent,rgba(255,255,255,.45),transparent); transform:translateX(-100%); animation:shimmer 2.6s ease-in-out infinite; }
+  @keyframes shimmer{ 0%{ transform:translateX(-100%); } 60%,100%{ transform:translateX(100%); } }
+
+  /* Häkchen setzt sich mit kleinem "Pop" */
+  @keyframes pop{ 0%{ transform:scale(1); } 40%{ transform:scale(1.22); } 100%{ transform:scale(1); } }
+  .cb:checked{ animation:pop .28s ease; }
+
+  /* Ergebnis-Zahlen wechseln weich */
+  .result-strip .v, .cap-big{ transition:color .25s ease; }
+
   @media print{
     .topnav,.hero,section.info,footer,.c-actions,.aside .card.tools,.aside .card.kompass,.procard,#toast,.demo-note,.legal-overlay,.routebar{ display:none !important; }
     body{ background:#fff; }
@@ -462,6 +515,8 @@
   @media (prefers-reduced-motion: reduce){
     html{ scroll-behavior:auto; }
     *{ transition:none !important; animation:none !important; }
+    .etappe, #cockpitBody.reveal{ opacity:1 !important; transform:none !important; }
+    .pbar i::after{ display:none !important; }
   }
 </style>
 </head>
@@ -568,16 +623,19 @@
       <p class="c-meta" id="metaLine"></p>
       <span class="demo-note" id="demoNote">Vorschau-Modus: Die Live-KI ist gerade nicht verbunden — diese Route basiert auf einer Branchenvorlage.</span>
 
+      <!-- Routen-Karte: die 5 Etappen als Wegstrecke, wo stehe ich? -->
+      <div class="journeymap" id="journeymap"></div>
+
       <!-- navo spricht: persönliche Einschätzung zur konkreten Idee -->
       <div class="briefing" id="briefing">
         <span class="brief-avatar" aria-hidden="true">◆</span>
         <p id="briefingText"></p>
       </div>
 
-      <!-- Der eine wichtigste erste Schritt -->
+      <!-- Dein nächster Schritt (springt automatisch weiter) -->
       <div class="firststep" id="firstStep">
         <div class="fs-left">
-          <span class="fs-kick">Jetzt sofort</span>
+          <span class="fs-kick" id="fsKick">Dein nächster Schritt</span>
           <p id="firstStepText"></p>
         </div>
         <div class="fs-time" id="timeframeWrap">
@@ -1240,6 +1298,7 @@ async function createRoute(idea){
       renderRoutebar();
       loader.hidden = true;
       cockpitBody.hidden = false;
+      cockpitBody.classList.remove('reveal'); void cockpitBody.offsetWidth; cockpitBody.classList.add('reveal');
       updateContinueCard();
       toast(source === 'ai' ? 'Deine Route steht.' : 'Route erstellt (Vorschau-Modus).');
     }, 420);
@@ -1275,13 +1334,7 @@ function renderCockpit(){
   if(p.zeitrahmen){ $('timeframeVal').textContent = p.zeitrahmen; $('timeframeWrap').style.display = ''; }
   else { $('timeframeWrap').style.display = 'none'; }
 
-  // Jetzt sofort: erster wichtigster Schritt (aus KI-Feld oder erstem Wegpunkt)
-  let fs = p.erster_schritt_jetzt;
-  if(!fs && p.etappen && p.etappen[0] && p.etappen[0].schritte && p.etappen[0].schritte[0]){
-    fs = p.etappen[0].schritte[0].text;
-  }
-  $('firstStepText').textContent = fs || '';
-  $('firstStep').style.display = fs ? '' : 'none';
+  // "Dein nächster Schritt" wird dynamisch gesetzt (updateNextStep, siehe unten)
 
   $('aEinsch').textContent = p.einschaetzung || '–';
   $('aRisiko').textContent = p.risiko || '–';
@@ -1299,6 +1352,8 @@ function renderCockpit(){
     const wrap = document.createElement('div');
     wrap.className = 'etappe';
     wrap.dataset.ei = ei;
+    wrap.id = 'et' + ei;
+    wrap.style.animationDelay = (Math.min(ei, 6) * 0.08) + 's';
 
     const wp = document.createElement('div');
     wp.className = 'waypoint';
@@ -1396,6 +1451,60 @@ function updateProgress(){
   const t = totalSteps(), d = doneSteps();
   $('pfill').style.width = (t ? Math.round(d/t*100) : 0) + '%';
   $('ptext').textContent = d + ' von ' + t + ' Wegpunkten';
+  updateNextStep();
+  renderJourneyMap();
+}
+
+/* Nächster offener Wegpunkt (für "Dein nächster Schritt" und die aktuelle Etappe) */
+function nextOpenStep(){
+  const p = state.plan;
+  for(let ei=0; ei<p.etappen.length; ei++){
+    const et = p.etappen[ei];
+    for(let si=0; si<(et.schritte||[]).length; si++){
+      if(!state.checks['e'+ei+'s'+si]) return { ei, si, text:et.schritte[si].text, etappe:et.name };
+    }
+  }
+  return null;
+}
+/* "Dein nächster Schritt" springt automatisch auf den nächsten offenen Wegpunkt */
+function updateNextStep(){
+  const fs = $('firstStep');
+  const n = nextOpenStep();
+  if(!n){
+    fs.classList.add('fs-done');
+    $('fsKick').textContent = 'Alle Wegpunkte geschafft';
+    $('firstStepText').textContent = 'Stark — du hast deine ganze Route abgehakt! Jetzt heißt es dranbleiben und den ersten Kunden zum Stammkunden machen. Für die nächste Idee startest du einfach eine neue Route.';
+  } else {
+    fs.classList.remove('fs-done');
+    $('fsKick').textContent = 'Dein nächster Schritt';
+    $('firstStepText').textContent = n.text;
+  }
+  fs.style.display = '';
+}
+/* Routen-Karte: 5 Etappen als Wegstrecke, zeigt erledigt / aktuell / offen */
+function renderJourneyMap(){
+  const box = $('journeymap'); if(!box) return;
+  const p = state.plan;
+  const n = nextOpenStep();
+  const currIdx = n ? n.ei : -1;   // -1 = alles fertig
+  box.innerHTML = '';
+  p.etappen.forEach((et, ei) => {
+    let done = 0; const total = (et.schritte||[]).length;
+    (et.schritte||[]).forEach((_,x) => { if(state.checks['e'+ei+'s'+x]) done++; });
+    const complete = total > 0 && done === total;
+    const node = document.createElement('button');
+    node.type = 'button';
+    node.className = 'jm-node' + (complete ? ' done' : '') + (ei === currIdx ? ' current' : '');
+    const dot = document.createElement('span'); dot.className = 'jm-dot'; dot.textContent = complete ? '✓' : (ei + 1);
+    const name = document.createElement('span'); name.className = 'jm-name'; name.textContent = et.name || ('Etappe ' + (ei+1));
+    const prog = document.createElement('span'); prog.className = 'jm-prog'; prog.textContent = done + '/' + total;
+    node.append(dot, name, prog);
+    node.addEventListener('click', () => {
+      const target = document.getElementById('et' + ei);
+      if(target) target.scrollIntoView({ behavior:'smooth', block:'center' });
+    });
+    box.appendChild(node);
+  });
 }
 function updateContinueCard(){
   const cc = $('continueCard');
