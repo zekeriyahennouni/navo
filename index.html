@@ -395,8 +395,63 @@
   .legal-doc .legal-hint{ font-size:.85rem; color:var(--ink-faint); margin-bottom:6px; }
   @media(max-width:560px){ .legal-sheet{ padding:44px 22px 30px; } }
 
+  /* Routen-Leiste (mehrere gespeicherte Routen) */
+  .routebar{ display:flex; align-items:center; gap:12px; flex-wrap:wrap; background:var(--card); border:1px solid var(--line); border-radius:14px; padding:12px 14px; margin-bottom:22px; box-shadow:var(--shadow); }
+  .rb-label{ font-family:'IBM Plex Mono',monospace; font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-faint); }
+  .rb-chips{ display:flex; gap:8px; flex-wrap:wrap; flex:1; }
+  .rb-chip{ display:inline-flex; align-items:center; gap:8px; border:1px solid var(--line); background:var(--paper); color:var(--ink-soft); border-radius:999px; padding:7px 12px 7px 14px; font-size:.84rem; font-weight:500; cursor:pointer; transition:.15s ease; }
+  .rb-chip:hover{ border-color:var(--green); color:var(--green); }
+  .rb-chip.active{ background:var(--green); border-color:var(--green); color:#F0EDE3; }
+  .rb-chip .rb-prog{ font-family:'IBM Plex Mono',monospace; font-size:.7rem; opacity:.8; }
+  .rb-chip .rb-x{ border:none; background:transparent; color:inherit; opacity:.55; font-size:.95rem; line-height:1; padding:0 0 0 2px; cursor:pointer; }
+  .rb-chip .rb-x:hover{ opacity:1; }
+  .rb-new{ border:1px dashed var(--gold-deep); background:var(--gold-soft); color:var(--gold-deep); border-radius:999px; padding:7px 14px; font-size:.84rem; font-weight:600; cursor:pointer; white-space:nowrap; }
+  .rb-new:hover{ background:#EED9B0; }
+
+  /* Hinweis bei Nicht-Idee */
+  .noidea{ max-width:560px; margin:20px auto 40px; text-align:center; background:var(--card); border:1px solid var(--line); border-radius:20px; padding:40px 30px; box-shadow:var(--shadow); }
+  .noidea .ni-mark{ display:inline-flex; align-items:center; justify-content:center; width:52px; height:52px; border-radius:50%; border:2px solid var(--gold); color:var(--gold-deep); font-size:1.1rem; margin-bottom:18px; }
+  .noidea h2{ font-size:1.4rem; margin-bottom:10px; }
+  .noidea p{ color:var(--ink-soft); font-size:1rem; max-width:44ch; margin:0 auto 20px; }
+  .ni-examples{ display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-bottom:24px; }
+  .ni-ex{ background:var(--paper-2); border:1px solid var(--line); color:var(--ink-soft); border-radius:999px; padding:8px 15px; font-size:.85rem; cursor:pointer; transition:.15s ease; }
+  .ni-ex:hover{ border-color:var(--green); color:var(--green); background:var(--green-soft); }
+
+  /* Zahlen-Werkstatt: Erklärungen */
+  .calc-intro{ font-size:.86rem; color:var(--ink-soft); background:var(--paper-2); border-radius:10px; padding:11px 13px; margin-bottom:14px; line-height:1.5; }
+  .lbl-hint{ display:block; font-family:'Inter',sans-serif; font-weight:400; font-size:.76rem; color:var(--ink-faint); margin-top:1px; }
+
+  /* Wegpunkt: "Wie mache ich das?" */
+  .step-wrap{ display:flex; flex-direction:column; }
+  .step-how{ align-self:flex-start; margin:6px 0 0 36px; border:none; background:transparent; color:var(--gold-deep); font-size:.8rem; font-weight:600; cursor:pointer; padding:3px 4px; display:inline-flex; align-items:center; gap:6px; border-radius:6px; }
+  .step-how::before{ content:"?"; display:inline-flex; align-items:center; justify-content:center; width:16px; height:16px; border-radius:50%; background:var(--gold-soft); color:var(--gold-deep); font-size:.7rem; font-weight:700; }
+  .step-how:hover{ color:var(--ink); }
+  .step-how-out{ display:none; margin:8px 0 2px 36px; background:var(--paper-2); border:1px solid var(--line); border-left:3px solid var(--gold); border-radius:10px; padding:13px 15px; }
+  .step-how-out.show{ display:block; }
+  .step-how-out ol{ margin:0; padding-left:20px; display:grid; gap:8px; }
+  .step-how-out ol li{ font-size:.9rem; line-height:1.5; }
+  .step-how-out .how-busy{ font-size:.9rem; color:var(--ink-faint); }
+  .step-how-out .how-head{ font-family:'Fraunces',serif; font-weight:600; font-size:.92rem; margin-bottom:8px; color:var(--green); }
+
+  /* navo spricht (Briefing) */
+  .briefing{ display:flex; gap:14px; background:var(--green); color:#EAF0EA; border-radius:16px; padding:20px 22px; margin:4px 0 18px; position:relative; overflow:hidden; }
+  .briefing::after{ content:""; position:absolute; inset:0; background:radial-gradient(400px 200px at 100% 0%, rgba(201,151,63,.16), transparent 65%); pointer-events:none; }
+  .brief-avatar{ flex-shrink:0; width:36px; height:36px; border-radius:50%; border:1.5px solid var(--gold); color:var(--gold-soft); display:flex; align-items:center; justify-content:center; font-size:.85rem; position:relative; z-index:1; }
+  .briefing p{ position:relative; z-index:1; font-size:1.05rem; line-height:1.55; font-family:'Fraunces',serif; font-weight:500; }
+
+  /* Jetzt-sofort + Zeitrahmen */
+  .firststep{ display:flex; gap:18px; align-items:stretch; background:var(--card); border:1px solid var(--line); border-left:4px solid var(--gold); border-radius:14px; padding:16px 20px; margin-bottom:24px; box-shadow:var(--shadow); }
+  .fs-left{ flex:1; }
+  .fs-kick{ font-family:'IBM Plex Mono',monospace; font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; color:var(--gold-deep); display:inline-flex; align-items:center; gap:7px; }
+  .fs-kick::before{ content:"➜"; }
+  .firststep p{ margin-top:5px; font-size:1rem; font-weight:500; color:var(--ink); }
+  .fs-time{ flex-shrink:0; display:flex; flex-direction:column; align-items:flex-end; justify-content:center; border-left:1px dashed var(--line); padding-left:18px; text-align:right; }
+  .fs-time-label{ font-family:'IBM Plex Mono',monospace; font-size:.64rem; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-faint); }
+  .fs-time-val{ font-family:'Fraunces',serif; font-weight:700; font-size:1.15rem; color:var(--green); margin-top:2px; line-height:1.15; }
+  @media(max-width:560px){ .firststep{ flex-direction:column; gap:12px; } .fs-time{ flex-direction:row; gap:8px; align-items:center; border-left:none; border-top:1px dashed var(--line); padding-left:0; padding-top:12px; text-align:left; } }
+
   @media print{
-    .topnav,.hero,section.info,footer,.c-actions,.aside .card.tools,.aside .card.kompass,.procard,#toast,.demo-note,.legal-overlay{ display:none !important; }
+    .topnav,.hero,section.info,footer,.c-actions,.aside .card.tools,.aside .card.kompass,.procard,#toast,.demo-note,.legal-overlay,.routebar{ display:none !important; }
     body{ background:#fff; }
     .cockpit-grid{ display:block; }
     .card{ box-shadow:none; page-break-inside:avoid; }
@@ -484,7 +539,23 @@
       <div class="load-line" data-i="3">Wegpunkte werden gesetzt …</div>
     </div>
 
+    <!-- Hinweis, wenn die Eingabe keine echte Geschäftsidee ist -->
+    <div class="noidea" id="noIdea" hidden>
+      <span class="ni-mark" aria-hidden="true">◆</span>
+      <h2>Dafür brauche ich eine Geschäftsidee</h2>
+      <p id="noIdeaText">navo baut aus einer Geschäfts- oder Gründungsidee einen kompletten Fahrplan. Schreib mir kurz, was du starten oder verkaufen möchtest — dann geht's los.</p>
+      <div class="ni-examples" id="noIdeaExamples"></div>
+      <button type="button" class="btn btn-green" id="noIdeaBack">Neue Idee eingeben</button>
+    </div>
+
     <div id="cockpitBody" hidden>
+      <!-- Leiste: gespeicherte Routen wechseln -->
+      <div class="routebar" id="routebar" hidden>
+        <span class="rb-label">Deine Routen</span>
+        <div class="rb-chips" id="rbChips"></div>
+        <button type="button" class="rb-new" id="rbNew">+ Neue Route</button>
+      </div>
+
       <div class="c-head">
         <div>
           <span class="kicker">Deine Route</span>
@@ -495,6 +566,24 @@
       <p class="c-meta" id="metaLine"></p>
       <span class="demo-note" id="demoNote">Vorschau-Modus: Die Live-KI ist gerade nicht verbunden — diese Route basiert auf einer Branchenvorlage.</span>
 
+      <!-- navo spricht: persönliche Einschätzung zur konkreten Idee -->
+      <div class="briefing" id="briefing">
+        <span class="brief-avatar" aria-hidden="true">◆</span>
+        <p id="briefingText"></p>
+      </div>
+
+      <!-- Der eine wichtigste erste Schritt -->
+      <div class="firststep" id="firstStep">
+        <div class="fs-left">
+          <span class="fs-kick">Jetzt sofort</span>
+          <p id="firstStepText"></p>
+        </div>
+        <div class="fs-time" id="timeframeWrap">
+          <span class="fs-time-label">Bis zum 1. Kunden</span>
+          <span class="fs-time-val" id="timeframeVal">–</span>
+        </div>
+      </div>
+
       <div class="progress-row">
         <div class="pbar"><i id="pfill"></i></div>
         <span class="ptext" id="ptext">0 von 0 Wegpunkten</span>
@@ -502,7 +591,7 @@
       <div class="c-actions">
         <button type="button" class="btn btn-ghost" id="copyBtn">Route kopieren</button>
         <button type="button" class="btn btn-ghost" id="printBtn">Drucken / als PDF sichern</button>
-        <button type="button" class="btn btn-ghost" id="resetBtn">Neue Route</button>
+        <button type="button" class="btn btn-ghost" id="resetBtn">Diese Route löschen</button>
       </div>
 
       <div class="cockpit-grid">
@@ -527,28 +616,31 @@
 
           <div class="card">
             <h3>Zahlen-Werkstatt</h3>
-            <p class="sub">Rechnen statt raten — direkt hier</p>
+            <p class="sub">Nur für dich — damit du weißt, was du mindestens verlangen musst. Deine Kunden sehen diese Rechnung nie.</p>
             <div class="tabs" role="tablist">
               <button type="button" class="tab active" data-panel="pRate">Stundensatz</button>
               <button type="button" class="tab" data-panel="pCap">Kapital</button>
               <button type="button" class="tab" data-panel="pKur">Kleinunternehmer</button>
             </div>
             <div class="panel active" id="pRate">
-              <div class="f-row"><label for="rWunsch">Was willst du dir monatlich auszahlen? (€)</label><input type="number" id="rWunsch" value="2000" min="0" inputmode="numeric"></div>
-              <div class="f-row"><label for="rKosten">Geschäftskosten pro Monat (€)</label><input type="number" id="rKosten" value="200" min="0" inputmode="numeric"></div>
-              <div class="f-row"><label for="rStunden">Verkaufbare Stunden pro Woche</label><input type="number" id="rStunden" value="20" min="1" inputmode="numeric"></div>
-              <div class="result-strip"><span class="k">Dein Mindest-Stundensatz</span><span class="v" id="rOut">–</span></div>
+              <p class="calc-intro">Kurz gesagt: Wir rechnen aus, welchen Preis pro Stunde du nehmen musst, damit am Monatsende genug für dich übrig bleibt — nach Kosten, Steuern und Absicherung. Trag einfach drei Zahlen ein:</p>
+              <div class="f-row"><label for="rWunsch">Was möchtest du im Monat für dich verdienen? (€)</label><input type="number" id="rWunsch" value="2000" min="0" inputmode="numeric"></div>
+              <div class="f-row"><label for="rKosten">Geschäftskosten pro Monat (€) <span class="lbl-hint">z. B. Material, Sprit, Werbung</span></label><input type="number" id="rKosten" value="200" min="0" inputmode="numeric"></div>
+              <div class="f-row"><label for="rStunden">Stunden pro Woche, die du wirklich Kunden berechnen kannst <span class="lbl-hint">nicht Büro/Fahrt — nur bezahlte Arbeit</span></label><input type="number" id="rStunden" value="20" min="1" inputmode="numeric"></div>
+              <div class="result-strip"><span class="k">So viel solltest du mindestens pro Stunde verlangen</span><span class="v" id="rOut">–</span></div>
               <p class="calc-note">Grobe Rechnung inkl. ~35 % Puffer für Steuern & Absicherung. Unter diesem Satz arbeitest du auf Dauer mit Verlust. Keine Steuerberatung.</p>
             </div>
             <div class="panel" id="pCap">
-              <div class="f-row"><label for="cFix">Fixkosten pro Monat (€)</label><input type="number" id="cFix" value="400" min="0" inputmode="numeric"></div>
+              <p class="calc-intro">Damit du weißt, wie viel Geld du zum Start brauchst, bis die ersten Einnahmen kommen.</p>
+              <div class="f-row"><label for="cFix">Fixkosten pro Monat (€) <span class="lbl-hint">was jeden Monat sicher anfällt</span></label><input type="number" id="cFix" value="400" min="0" inputmode="numeric"></div>
               <div class="f-row"><label for="cMon">Monate bis zum ersten Umsatz</label><input type="number" id="cMon" value="3" min="0" inputmode="numeric"></div>
-              <div class="f-row"><label for="cEinmal">Einmalige Anschaffungen (€)</label><input type="number" id="cEinmal" value="300" min="0" inputmode="numeric"></div>
-              <div class="result-strip"><span class="k">Geschätzter Kapitalbedarf</span><span class="v" id="cOut">–</span></div>
+              <div class="f-row"><label for="cEinmal">Einmalige Anschaffungen (€) <span class="lbl-hint">z. B. Werkzeug, Ausstattung</span></label><input type="number" id="cEinmal" value="300" min="0" inputmode="numeric"></div>
+              <div class="result-strip"><span class="k">So viel Startkapital brauchst du etwa</span><span class="v" id="cOut">–</span></div>
               <p class="calc-note">Inkl. 15 % Sicherheitspuffer. Lieber etwas mehr einplanen als knapp kalkulieren.</p>
             </div>
             <div class="panel" id="pKur">
-              <div class="f-row"><label for="kUmsatz">Erwarteter Umsatz im 1. Jahr (€)</label><input type="number" id="kUmsatz" value="12000" min="0" inputmode="numeric"></div>
+              <p class="calc-intro">Prüft, ob die „Kleinunternehmerregelung" für dich gilt — das bedeutet weniger Papierkram am Anfang.</p>
+              <div class="f-row"><label for="kUmsatz">Erwarteter Umsatz im 1. Jahr (€) <span class="lbl-hint">was reinkommt, nicht dein Gewinn</span></label><input type="number" id="kUmsatz" value="12000" min="0" inputmode="numeric"></div>
               <div class="kur-verdict" id="kOut"></div>
               <p class="calc-note">Kleinunternehmerregelung = du weist keine Umsatzsteuer aus, weniger Papierkram. Grenzen (Stand 2025): 25.000 € im Vorjahr bzw. Gründungsjahr, 100.000 € im laufenden Jahr. Verbindlich klärt das dein Steuerberater oder das Finanzamt.</p>
             </div>
@@ -773,11 +865,13 @@ const API = window.NAVO_API_URL || '/api/chat';
 // leer ist, zeigt die Karte ehrlich "Bald verfügbar".
 const PRO_LINK = "";
 
-const STORE_KEY = 'navo_route_v1';
+const STORE_KEY = 'navo_route_v1';      // alte Einzelroute (nur noch zum Übernehmen)
+const ARCHIVE_KEY = 'navo_routes_v2';   // neu: mehrere Routen
 
 /* ----------------------- Hilfsfunktionen ----------------------------- */
 const $ = id => document.getElementById(id);
 const fmtEUR = n => Number(n).toLocaleString('de-DE') + ' €';
+const newId = () => 'r' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
 
 function toast(msg){
   const t = $('toast');
@@ -787,17 +881,43 @@ function toast(msg){
   t._h = setTimeout(() => t.classList.remove('show'), 2200);
 }
 
-function loadState(){
+/* Archiv = { active:id, routes:{ id: {id, idea, plan, checks, source, created} } } */
+function loadArchive(){
+  let arch = { active:null, routes:{} };
   try{
-    const raw = localStorage.getItem(STORE_KEY);
-    if(!raw) return null;
-    const s = JSON.parse(raw);
-    if(!s || !s.plan || !Array.isArray(s.plan.etappen)) return null;
-    return s;
-  }catch(e){ return null; }
+    const raw = localStorage.getItem(ARCHIVE_KEY);
+    if(raw){
+      const a = JSON.parse(raw);
+      if(a && a.routes) arch = { active:a.active||null, routes:a.routes };
+    }
+  }catch(e){}
+  // Alte Einzelroute übernehmen, falls vorhanden und Archiv noch leer
+  if(Object.keys(arch.routes).length === 0){
+    try{
+      const old = localStorage.getItem(STORE_KEY);
+      if(old){
+        const s = JSON.parse(old);
+        if(s && s.plan && Array.isArray(s.plan.etappen)){
+          const id = newId();
+          s.id = id; if(!s.created) s.created = Date.now();
+          arch.routes[id] = s; arch.active = id;
+          saveArchive(arch);
+        }
+        localStorage.removeItem(STORE_KEY);
+      }
+    }catch(e){}
+  }
+  return arch;
+}
+function saveArchive(arch){
+  try{ localStorage.setItem(ARCHIVE_KEY, JSON.stringify(arch || archive)); }catch(e){}
 }
 function saveState(){
-  try{ localStorage.setItem(STORE_KEY, JSON.stringify(state)); }catch(e){}
+  if(state && state.id){ archive.routes[state.id] = state; archive.active = state.id; }
+  saveArchive();
+}
+function routeList(){
+  return Object.values(archive.routes).sort((a,b) => (b.created||0) - (a.created||0));
 }
 
 async function callAI(text){
@@ -829,6 +949,34 @@ function detectKey(text){
   if(/(gastro|restaurant|café|cafe|imbiss|foodtruck|food truck|catering|küche|essen|back)/.test(t)) return 'gastro';
   if(/(handwerk|maler|elektr|sanitär|montage|schreiner|tischler|fliesen|garten)/.test(t)) return 'handwerk';
   return 'sonstiges';
+}
+
+/* Grobe Plausibilitätsprüfung für den Vorschau-Modus (ohne Live-KI).
+   Gibt einen Grund zurück, wenn die Eingabe wohl KEINE Geschäftsidee ist,
+   sonst null. Die echte KI prüft das im Betrieb deutlich genauer. */
+function looksNotAnIdea(text){
+  const raw = (text || '').trim();
+  const t = raw.toLowerCase();
+  if(raw.length < 4) return 'zu_kurz';
+  const letters = t.replace(/[^a-zäöüß]/g, '');
+  // Nur Buchstabensalat / keine echten Vokale (z. B. "hjkl")
+  if(letters.length >= 4 && !/[aeiouäöü]/.test(letters)) return 'kein_wort';
+  // Enthält gar keinen Buchstaben (nur Zahlen/Zeichen)
+  if(!/[a-zäöü]/.test(t)) return 'kein_wort';
+  // Typische Tastatur-Reihen (asdf, qwertz, yxcv ...)
+  if(/^[a-zäöü\s]{3,}$/.test(t) && /(asdf|qwer|wert|erty|sdfg|dfgh|fghj|ghjk|hjkl|yxcv|xcvb|cvbn|jklö|uiop)/.test(t.replace(/\s/g,''))) return 'kein_wort';
+  // Ein einzelnes kurzes „Wort" ohne echte Vokal-Konsonant-Struktur (z. B. asdf)
+  if(!/\s/.test(t) && letters.length <= 6){
+    const vowels = (letters.match(/[aeiouäöü]/g) || []).length;
+    if(vowels <= 1 && !/(shop|job|app|kfz|bio|tee|eis|tag)/.test(t)) return 'kein_wort';
+  }
+  // Gefühls-/Lebensthemen ohne Geschäftsbezug
+  const persoenlich = /\b(gay|schwul|lesbisch|trans|verliebt|traurig|depress|einsam|glücklich|sterben|tot|liebe|beziehung|abnehmen|dick|hübsch|schön sein|berühmt)\b/;
+  const business = /(firma|business|geschäft|gründ|selbstständig|selbständig|shop|laden|verkauf|dienst|service|kunden|start|unternehmen|handel|café|cafe|restaurant|handwerk|agentur|nebenbei|verdien|job)/;
+  if(persoenlich.test(t) && !business.test(t)) return 'lebensthema';
+  // Reine Begrüßung / Test
+  if(/^(hallo|hi|hey|test|na|moin|servus|hilfe|guten (tag|morgen|abend))\W*$/.test(t)) return 'gruss';
+  return null;
 }
 
 const KB = {
@@ -941,9 +1089,13 @@ const KB = {
 
 function demoPlan(idea){
   const d = KB[detectKey(idea)];
+  const zeit = d.ampel === 'gruen' ? '4–8 Wochen' : d.ampel === 'rot' ? '8–16 Wochen' : '6–12 Wochen';
   return {
     titel:'Deine Route: ' + d.name,
     branche:d.branche, ampel:d.ampel,
+    briefing:'Okay — ' + d.einsch.charAt(0).toLowerCase() + d.einsch.slice(1) + ' Ich hab dir daraus eine klare Route gebaut. Fang oben beim ersten Schritt an, der Rest ergibt sich Wegpunkt für Wegpunkt.',
+    zeitrahmen:zeit,
+    erster_schritt_jetzt:d.klar1,
     einschaetzung:d.einsch, risiko:d.risiko, startmodell:d.start,
     kapital_min:d.kmin, kapital_max:d.kmax, kapital_hinweis:d.khin,
     erster_kunde:d.kunde,
@@ -985,7 +1137,8 @@ const TOOL_FALLBACK = {
 };
 
 /* ----------------------------- Zustand ------------------------------- */
-let state = loadState();
+let archive = loadArchive();
+let state = (archive.active && archive.routes[archive.active]) ? archive.routes[archive.active] : null;
 
 /* --------------------------- Elemente -------------------------------- */
 const routeForm = $('routeForm'), ideaInput = $('ideaInput');
@@ -993,12 +1146,30 @@ const cockpit = $('cockpit'), loader = $('loader'), cockpitBody = $('cockpitBody
 const etappenBox = $('etappen');
 
 /* -------------------------- Route erstellen -------------------------- */
+function showNoIdea(text, examples){
+  loader.hidden = true;
+  cockpitBody.hidden = true;
+  $('noIdeaText').textContent = text ||
+    'navo baut aus einer Geschäfts- oder Gründungsidee einen kompletten Fahrplan. Schreib mir kurz, was du starten oder verkaufen möchtest — dann geht\'s los.';
+  const exBox = $('noIdeaExamples');
+  exBox.innerHTML = '';
+  (examples && examples.length ? examples : ['Reinigungsfirma nebenbei','Kleiner Online-Shop','Als Handwerker selbstständig'])
+    .slice(0,3).forEach(ex => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'ni-ex'; b.textContent = ex;
+      b.addEventListener('click', () => { $('noIdea').hidden = true; createRoute(ex); });
+      exBox.appendChild(b);
+    });
+  $('noIdea').hidden = false;
+  cockpit.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
 async function createRoute(idea){
   idea = (idea || '').trim();
   if(!idea){ ideaInput.focus(); return; }
-  if(state && !confirm('Deine bisherige Route wird durch eine neue ersetzt. Fortfahren?')) return;
 
   cockpit.hidden = false;
+  $('noIdea').hidden = true;
   cockpitBody.hidden = true;
   loader.hidden = false;
   cockpit.scrollIntoView({ behavior:'smooth', block:'start' });
@@ -1009,23 +1180,37 @@ async function createRoute(idea){
   lines.forEach((l,i) => setTimeout(() => l.classList.add('show'), 250 + i*520));
 
   const t0 = Date.now();
-  let plan = null, source = 'ai';
+  let plan = null, source = 'ai', notIdea = null;
   try{
     const reply = await callAI('[ROUTE]\nIdee: ' + idea);
-    plan = extractJSON(reply);
-    if(!plan || !Array.isArray(plan.etappen) || plan.etappen.length < 3) throw new Error('unvollständig');
+    const parsed = extractJSON(reply);
+    if(parsed && parsed.keine_idee){
+      notIdea = { text: parsed.antwort, examples: parsed.beispiele };  // KI hat Unsinn erkannt
+    } else {
+      plan = parsed;
+      if(!plan || !Array.isArray(plan.etappen) || plan.etappen.length < 3) throw new Error('unvollständig');
+    }
   }catch(e){
-    plan = demoPlan(idea);
-    source = 'demo';
+    // Keine KI -> Vorschau-Modus. Vorher grob prüfen, ob es überhaupt eine Idee ist.
+    if(looksNotAnIdea(idea)){
+      notIdea = { text:null, examples:null };
+    } else {
+      plan = demoPlan(idea);
+      source = 'demo';
+    }
   }
 
-  const wait = Math.max(0, 2600 - (Date.now() - t0));
+  const wait = Math.max(0, notIdea ? 1200 : 2600 - (Date.now() - t0));
   setTimeout(() => {
+    if(notIdea){ showNoIdea(notIdea.text, notIdea.examples); return; }
     lines.forEach(l => l.classList.add('done'));
     setTimeout(() => {
-      state = { idea, plan, checks:{}, source, created:Date.now() };
+      const id = newId();
+      state = { id, idea, plan, checks:{}, source, created:Date.now() };
+      archive.routes[id] = state; archive.active = id;
       saveState();
       renderCockpit();
+      renderRoutebar();
       loader.hidden = true;
       cockpitBody.hidden = false;
       updateContinueCard();
@@ -1053,6 +1238,23 @@ function renderCockpit(){
   $('ampelText').textContent = p.ampel === 'gruen' ? 'Machbar' : p.ampel === 'rot' ? 'Erst schärfen' : 'Machbar mit Vorsicht';
 
   $('demoNote').classList.toggle('show', state.source === 'demo');
+
+  // navo spricht (Briefing) — persönliche Einschätzung zur konkreten Idee
+  const brief = p.briefing || p.einschaetzung || '';
+  $('briefingText').textContent = brief;
+  $('briefing').style.display = brief ? '' : 'none';
+
+  // Zeitrahmen bis zum ersten Kunden
+  if(p.zeitrahmen){ $('timeframeVal').textContent = p.zeitrahmen; $('timeframeWrap').style.display = ''; }
+  else { $('timeframeWrap').style.display = 'none'; }
+
+  // Jetzt sofort: erster wichtigster Schritt (aus KI-Feld oder erstem Wegpunkt)
+  let fs = p.erster_schritt_jetzt;
+  if(!fs && p.etappen && p.etappen[0] && p.etappen[0].schritte && p.etappen[0].schritte[0]){
+    fs = p.etappen[0].schritte[0].text;
+  }
+  $('firstStepText').textContent = fs || '';
+  $('firstStep').style.display = fs ? '' : 'none';
 
   $('aEinsch').textContent = p.einschaetzung || '–';
   $('aRisiko').textContent = p.risiko || '–';
@@ -1084,6 +1286,7 @@ function renderCockpit(){
     const steps = document.createElement('div'); steps.className = 'steps';
     (et.schritte || []).forEach((s, si) => {
       const key = 'e' + ei + 's' + si;
+      const swrap = document.createElement('div'); swrap.className = 'step-wrap';
       const row = document.createElement('label'); row.className = 'step';
       const cb = document.createElement('input'); cb.type = 'checkbox'; cb.className = 'cb';
       cb.checked = !!state.checks[key];
@@ -1091,7 +1294,7 @@ function renderCockpit(){
       cb.addEventListener('change', () => {
         state.checks[key] = cb.checked;
         row.classList.toggle('checked', cb.checked);
-        saveState(); updateProgress(); updateEtappeDone(wrap, et, ei);
+        saveState(); updateProgress(); updateEtappeDone(wrap, et, ei); renderRoutebar();
         if(cb.checked){
           const allDone = (et.schritte||[]).every((_,x) => state.checks['e'+ei+'s'+x]);
           toast(allDone ? ('Etappe „' + (et.name||'') + '" geschafft!') : 'Wegpunkt erledigt.');
@@ -1104,7 +1307,15 @@ function renderCockpit(){
       tag.className = 'tag ' + (d.indexOf('heute') >= 0 ? 't-heute' : d.indexOf('woche') >= 0 ? 't-woche' : 't-spaeter');
       tag.textContent = s.dauer || 'Später';
       row.append(cb, txt, tag);
-      steps.appendChild(row);
+
+      // "Wie mache ich das?" — außerhalb des Labels, damit kein Abhaken ausgelöst wird
+      const how = document.createElement('button');
+      how.type = 'button'; how.className = 'step-how'; how.textContent = 'Wie mache ich das?';
+      const out = document.createElement('div'); out.className = 'step-how-out';
+      how.addEventListener('click', () => explainStep(s.text || '', out));
+
+      swrap.append(row, how, out);
+      steps.appendChild(swrap);
     });
     wrap.appendChild(steps);
     etappenBox.appendChild(wrap);
@@ -1120,6 +1331,39 @@ function updateEtappeDone(wrap, et, ei){
   const all = (et.schritte||[]).length > 0 && (et.schritte||[]).every((_,x) => state.checks['e'+ei+'s'+x]);
   wrap.classList.toggle('done', all);
 }
+
+/* "Wie mache ich das?" — erklärt einen Wegpunkt im Detail (KI im Hintergrund) */
+async function explainStep(text, out){
+  // Schon offen -> zuklappen
+  if(out.classList.contains('show')){ out.classList.remove('show'); return; }
+  // Schon geladen -> nur wieder aufklappen
+  if(out._loaded){ out.classList.add('show'); return; }
+
+  out.classList.add('show');
+  out.innerHTML = '<p class="how-busy">navo erklärt dir diesen Schritt …</p>';
+
+  let data = null;
+  try{
+    const ctx = '[SCHRITT]\nIdee: ' + state.idea + '\nBranche: ' + (state.plan.branche || '') + '\nSchritt: ' + text;
+    const reply = await callAI(ctx);
+    data = extractJSON(reply);
+    if(!data || !Array.isArray(data.punkte) || data.punkte.length === 0) throw new Error('format');
+  }catch(e){
+    data = { punkte:[
+      'Die Live-KI ist gerade nicht verbunden — deshalb hier die allgemeine Vorgehensweise.',
+      'Mach den Schritt so klein wie möglich: Was ist die allererste konkrete Handlung, die du in 10 Minuten erledigen könntest?',
+      'Blocke dir feste Zeit dafür (z. B. heute Abend um 20 Uhr) und mach nur diese eine Sache.',
+      'Wenn du an einer Stelle nicht weiterkommst, frag unten im „Kompass" ganz konkret danach.'
+    ] };
+  }
+
+  out.innerHTML = '';
+  const head = document.createElement('div'); head.className = 'how-head'; head.textContent = 'So gehst du vor:';
+  const ol = document.createElement('ol');
+  data.punkte.forEach(p => { const li = document.createElement('li'); li.textContent = p; ol.appendChild(li); });
+  out.append(head, ol);
+  out._loaded = true;
+}
 function updateProgress(){
   const t = totalSteps(), d = doneSteps();
   $('pfill').style.width = (t ? Math.round(d/t*100) : 0) + '%';
@@ -1127,18 +1371,81 @@ function updateProgress(){
 }
 function updateContinueCard(){
   const cc = $('continueCard');
+  const list = routeList();
   if(state){
     cc.classList.add('show');
+    $('ccTitle').textContent = list.length > 1 ? ('Willkommen zurück 👋  ·  ' + list.length + ' Routen gespeichert') : 'Willkommen zurück 👋';
     $('ccSub').textContent = (state.plan.titel || 'Deine Route') + ' — ' + doneSteps() + ' von ' + totalSteps() + ' Wegpunkten erledigt.';
   } else {
     cc.classList.remove('show');
   }
 }
 
+/* -------- Routen-Leiste: mehrere Routen anzeigen & wechseln ---------- */
+function shortTitle(r){
+  let t = (r.plan && r.plan.titel) ? r.plan.titel.replace(/^Deine Route:\s*/i, '') : (r.idea || 'Route');
+  return t.length > 26 ? t.slice(0, 24) + '…' : t;
+}
+function routeProgress(r){
+  let tot = 0; (r.plan.etappen||[]).forEach(e => tot += (e.schritte||[]).length);
+  const done = Object.values(r.checks||{}).filter(Boolean).length;
+  return done + '/' + tot;
+}
+function renderRoutebar(){
+  const bar = $('routebar'), box = $('rbChips');
+  const list = routeList();
+  bar.hidden = list.length < 2;   // erst ab 2 Routen sichtbar
+  box.innerHTML = '';
+  list.forEach(r => {
+    const chip = document.createElement('div');
+    chip.className = 'rb-chip' + (state && r.id === state.id ? ' active' : '');
+    const label = document.createElement('span');
+    label.textContent = shortTitle(r);
+    label.style.cursor = 'pointer';
+    label.addEventListener('click', () => switchRoute(r.id));
+    const prog = document.createElement('span'); prog.className = 'rb-prog'; prog.textContent = routeProgress(r);
+    const x = document.createElement('button'); x.type = 'button'; x.className = 'rb-x'; x.textContent = '✕';
+    x.setAttribute('aria-label', 'Route löschen');
+    x.addEventListener('click', (e) => { e.stopPropagation(); deleteRoute(r.id); });
+    chip.append(label, prog, x);
+    box.appendChild(chip);
+  });
+}
+function switchRoute(id){
+  if(!archive.routes[id]) return;
+  state = archive.routes[id];
+  archive.active = id; saveArchive();
+  renderCockpit(); renderRoutebar(); updateContinueCard();
+  cockpit.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+function deleteRoute(id){
+  const r = archive.routes[id]; if(!r) return;
+  if(!confirm('Route „' + shortTitle(r) + '" wirklich löschen?')) return;
+  delete archive.routes[id];
+  const list = routeList();
+  if(state && state.id === id){
+    state = list.length ? list[0] : null;
+    archive.active = state ? state.id : null;
+  }
+  saveArchive();
+  if(state){ renderCockpit(); renderRoutebar(); }
+  else { cockpit.hidden = true; cockpitBody.hidden = true;
+    $('navCta').textContent = 'Route berechnen'; $('navCta').setAttribute('href', '#top'); }
+  updateContinueCard();
+  toast('Route gelöscht.');
+}
+$('rbNew').addEventListener('click', () => {
+  ideaInput.value = '';
+  window.scrollTo({ top:0, behavior:'smooth' });
+  setTimeout(() => ideaInput.focus(), 400);
+});
+
 /* ------------------------------ Aktionen ----------------------------- */
 $('copyBtn').addEventListener('click', async () => {
   const p = state.plan;
   let out = p.titel + '\n' + '='.repeat((p.titel||'').length) + '\n\n';
+  if(p.briefing) out += p.briefing + '\n\n';
+  if(p.zeitrahmen) out += 'Zeitrahmen bis zum ersten Kunden: ' + p.zeitrahmen + '\n';
   out += 'Einschätzung: ' + p.einschaetzung + '\nGrößtes Risiko: ' + p.risiko + '\nStartmodell: ' + p.startmodell + '\n';
   out += 'Kapital zum Start: ' + fmtEUR(p.kapital_min) + ' – ' + fmtEUR(p.kapital_max) + ' (' + (p.kapital_hinweis||'') + ')\n';
   out += 'Erster Kunde: ' + p.erster_kunde + '\n\n';
@@ -1154,16 +1461,15 @@ $('copyBtn').addEventListener('click', async () => {
   catch(e){ toast('Kopieren nicht möglich — bitte manuell markieren.'); }
 });
 $('printBtn').addEventListener('click', () => window.print());
-$('resetBtn').addEventListener('click', () => {
-  if(!confirm('Route und Fortschritt wirklich löschen?')) return;
-  try{ localStorage.removeItem(STORE_KEY); }catch(e){}
-  state = null;
-  cockpit.hidden = true; cockpitBody.hidden = true;
-  updateContinueCard();
-  $('navCta').textContent = 'Route berechnen'; $('navCta').setAttribute('href', '#top');
-  ideaInput.value = ''; window.scrollTo({ top:0, behavior:'smooth' });
-});
+$('resetBtn').addEventListener('click', () => { if(state) deleteRoute(state.id); });
 $('ccNew').addEventListener('click', () => { ideaInput.focus(); ideaInput.scrollIntoView({behavior:'smooth', block:'center'}); });
+$('noIdeaBack').addEventListener('click', () => {
+  $('noIdea').hidden = true;
+  cockpit.hidden = true;
+  ideaInput.value = '';
+  window.scrollTo({ top:0, behavior:'smooth' });
+  setTimeout(() => ideaInput.focus(), 400);
+});
 
 /* ----------------------------- Werkzeuge ----------------------------- */
 document.querySelectorAll('.toolbtn').forEach(btn => {
@@ -1290,6 +1596,7 @@ document.querySelectorAll('#chips .chip').forEach(ch => {
 if(state){
   cockpit.hidden = false; loader.hidden = true; cockpitBody.hidden = false;
   renderCockpit();
+  renderRoutebar();
   updateContinueCard();
 }
 
