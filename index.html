@@ -408,6 +408,83 @@
   .rb-new{ border:1px dashed var(--gold-deep); background:var(--gold-soft); color:var(--gold-deep); border-radius:999px; padding:7px 14px; font-size:.84rem; font-weight:600; cursor:pointer; white-space:nowrap; }
   .rb-new:hover{ background:#EED9B0; }
 
+  /* ================= KUNDENFINDER ================= */
+  .kf{ background:var(--card); border:1px solid var(--line); border-radius:20px; padding:28px 26px; margin:26px 0 30px; box-shadow:var(--shadow); border-top:4px solid var(--gold); }
+  .kf-kick{ font-family:'IBM Plex Mono',monospace; font-size:.68rem; letter-spacing:.14em; text-transform:uppercase; color:var(--gold-deep); display:inline-flex; align-items:center; gap:8px; }
+  .kf-kick::before{ content:"◆"; font-size:.6rem; }
+  .kf h2{ font-family:'Fraunces',serif; font-size:1.5rem; margin:8px 0 6px; }
+  .kf .kf-sub{ color:var(--ink-soft); font-size:.96rem; max-width:56ch; }
+
+  /* Start-Zustand */
+  .kf-intro{ margin-top:20px; }
+  .kf-why{ display:grid; gap:9px; margin:16px 0 20px; }
+  .kf-why div{ display:flex; gap:11px; align-items:flex-start; font-size:.93rem; color:var(--ink-soft); }
+  .kf-why div::before{ content:"→"; color:var(--gold); font-weight:700; flex-shrink:0; }
+  .kf-busy{ font-size:.93rem; color:var(--ink-faint); margin-top:14px; }
+
+  /* Fundorte (WO sind meine ersten Kunden?) */
+  .kf-orte{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:11px; margin:6px 0 24px; }
+  .kf-ort{ background:var(--paper-2); border:1px solid var(--line); border-radius:12px; padding:14px 15px; }
+  .kf-ort b{ display:block; font-family:'Fraunces',serif; font-weight:600; font-size:.97rem; color:var(--green); margin-bottom:4px; }
+  .kf-ort span{ font-size:.87rem; color:var(--ink-soft); line-height:1.45; }
+
+  /* Fortschritts-Zeile */
+  .kf-stats{ display:flex; flex-wrap:wrap; gap:10px; margin:4px 0 20px; }
+  .kf-stat{ flex:1 1 108px; background:var(--paper-2); border:1px solid var(--line); border-radius:12px; padding:12px 14px; text-align:center; }
+  .kf-stat .n{ font-family:'Fraunces',serif; font-weight:700; font-size:1.5rem; color:var(--green); display:block; line-height:1.1; }
+  .kf-stat .l{ font-family:'IBM Plex Mono',monospace; font-size:.62rem; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-faint); }
+  .kf-stat.win{ background:var(--green-soft); border-color:#BFD9C8; }
+  .kf-stat.win .n{ color:var(--ok); }
+  .kf-nein-note{ font-size:.87rem; color:var(--ink-soft); background:var(--gold-soft); border:1px solid #E7D3AE; border-radius:10px; padding:11px 13px; margin-bottom:20px; }
+  .kf-nein-note b{ color:var(--gold-deep); }
+
+  /* Kontaktliste */
+  .kf-list{ display:grid; gap:11px; }
+  .kf-item{ border:1px solid var(--line); border-radius:14px; padding:15px 16px; background:var(--card); transition:.18s ease; }
+  .kf-item.s-ja{ border-color:#BFD9C8; background:var(--green-soft); }
+  .kf-item.s-nein{ opacity:.62; }
+  .kf-top{ display:flex; align-items:center; gap:11px; flex-wrap:wrap; }
+  .kf-name{ font-weight:600; font-size:1rem; flex:1 1 auto; min-width:120px; }
+  .kf-name small{ display:block; font-weight:400; font-size:.83rem; color:var(--ink-faint); }
+  .kf-badge{ font-family:'IBM Plex Mono',monospace; font-size:.64rem; letter-spacing:.05em; text-transform:uppercase; border-radius:999px; padding:4px 10px; white-space:nowrap; }
+  .b-offen{ background:var(--paper-2); color:var(--ink-faint); border:1px solid var(--line); }
+  .b-geschickt{ background:#EDF2F7; color:#3D5A73; border:1px solid #C9D8E5; }
+  .b-interesse{ background:var(--gold-soft); color:var(--gold-deep); border:1px solid #E7D3AE; }
+  .b-ja{ background:#EAF4EC; color:var(--ok); border:1px solid #BFD9C8; }
+  .b-nein{ background:#F3EFEA; color:var(--ink-faint); border:1px solid var(--line); }
+  .kf-del{ background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:1.05rem; padding:2px 5px; line-height:1; border-radius:6px; }
+  .kf-del:hover{ color:var(--red); }
+
+  .kf-acts{ display:flex; flex-wrap:wrap; gap:7px; margin-top:12px; }
+  .kf-btn{ border:1px solid var(--line); background:var(--card); color:var(--ink-soft); border-radius:999px; padding:7px 14px; font-size:.83rem; font-weight:600; cursor:pointer; transition:.15s ease; }
+  .kf-btn:hover{ border-color:var(--green); color:var(--green); }
+  .kf-btn.go{ background:var(--green); border-color:var(--green); color:#F0EDE3; }
+  .kf-btn.go:hover{ background:var(--green-2); color:#fff; }
+  .kf-btn.yes{ background:var(--ok); border-color:var(--ok); color:#fff; }
+  .kf-btn.yes:hover{ background:#25693F; color:#fff; }
+
+  /* Nachricht */
+  .kf-msg{ display:none; margin-top:12px; background:var(--paper-2); border:1px solid var(--line); border-left:3px solid var(--gold); border-radius:10px; padding:14px 15px; }
+  .kf-msg.show{ display:block; }
+  .kf-msg .mtxt{ font-size:.93rem; line-height:1.6; white-space:pre-wrap; color:var(--ink); }
+  .kf-msg .mbusy{ font-size:.9rem; color:var(--ink-faint); }
+  .kf-msg .mfoot{ display:flex; gap:8px; margin-top:12px; flex-wrap:wrap; }
+
+  /* Kontakt hinzufügen */
+  .kf-add{ margin-top:16px; border:1.5px dashed var(--line); border-radius:14px; padding:16px; }
+  .kf-add .ask{ font-size:.93rem; color:var(--ink-soft); margin-bottom:11px; }
+  .kf-add .ask b{ color:var(--green); }
+  .kf-fields{ display:flex; gap:9px; flex-wrap:wrap; }
+  .kf-fields input{ flex:1 1 150px; border:1px solid var(--line); border-radius:10px; padding:11px 13px; font-family:inherit; font-size:.94rem; background:var(--card); color:var(--ink); }
+  .kf-fields input:focus{ outline:none; border-color:var(--green); }
+  .kf-hint-small{ font-size:.8rem; color:var(--ink-faint); margin-top:9px; }
+
+  /* Sieg */
+  .kf-win{ display:none; margin-top:20px; background:var(--green); color:#EAF0EA; border-radius:16px; padding:22px 24px; text-align:center; }
+  .kf-win.show{ display:block; }
+  .kf-win h3{ font-family:'Fraunces',serif; color:#FBF9F2; font-size:1.3rem; margin-bottom:8px; }
+  .kf-win p{ font-size:.95rem; color:#C9D2C9; }
+
   /* Routen-Karte (Journey-Map) */
   .journeymap{ display:flex; align-items:stretch; gap:0; background:var(--card); border:1px solid var(--line); border-radius:16px; padding:10px 8px; margin:4px 0 20px; box-shadow:var(--shadow); overflow-x:auto; }
   .jm-node{ position:relative; flex:1 0 auto; min-width:104px; display:flex; flex-direction:column; align-items:center; gap:6px; background:transparent; border:none; padding:10px 6px 8px; cursor:pointer; border-radius:12px; transition:background .15s ease; }
@@ -648,6 +725,57 @@
         <div class="pbar"><i id="pfill"></i></div>
         <span class="ptext" id="ptext">0 von 0 Wegpunkten</span>
       </div>
+      <!-- ============ KUNDENFINDER ============ -->
+      <section class="kf" id="kundenfinder">
+        <span class="kf-kick">Der Kundenfinder</span>
+        <h2>Dein erster zahlender Kunde</h2>
+        <p class="kf-sub">Der Punkt, an dem die meisten scheitern — nicht an der Idee, sondern daran, dass niemand ihnen zeigt, wie man Kunden gewinnt. Genau hier lässt navo dich nicht allein.</p>
+
+        <!-- Start-Zustand -->
+        <div class="kf-intro" id="kfIntro">
+          <div class="kf-why">
+            <div>navo zeigt dir, <b>wo</b> deine ersten Kunden konkret zu finden sind</div>
+            <div>Du sammelst echte Kontakte — navo <b>schreibt jede Nachricht fertig</b></div>
+            <div>Du hakst ab: geschickt → geantwortet → <b>erstes Ja</b></div>
+          </div>
+          <button type="button" class="btn btn-green" id="kfStart">Kundenfinder starten</button>
+          <p class="kf-busy" id="kfBusy" hidden>navo sucht die besten Anlaufstellen für deine Idee …</p>
+        </div>
+
+        <!-- Aktiv -->
+        <div id="kfBody" hidden>
+          <div class="kf-stats">
+            <div class="kf-stat"><span class="n" id="kfNKontakte">0</span><span class="l">Kontakte</span></div>
+            <div class="kf-stat"><span class="n" id="kfNGeschickt">0</span><span class="l">Angeschrieben</span></div>
+            <div class="kf-stat"><span class="n" id="kfNInteresse">0</span><span class="l">Interesse</span></div>
+            <div class="kf-stat win"><span class="n" id="kfNJa">0</span><span class="l">Zusagen</span></div>
+          </div>
+
+          <div class="kf-nein-note" id="kfNeinNote" hidden></div>
+
+          <h3 style="font-family:'Fraunces',serif;font-size:1.05rem;margin-bottom:10px">Wo deine ersten Kunden sind</h3>
+          <div class="kf-orte" id="kfOrte"></div>
+
+          <h3 style="font-family:'Fraunces',serif;font-size:1.05rem;margin-bottom:10px">Deine Kontakte</h3>
+          <div class="kf-list" id="kfList"></div>
+
+          <div class="kf-add">
+            <p class="ask" id="kfAsk"><b>Wer fällt dir als Erstes ein?</b> Eine einzige Person oder ein Laden reicht — fang klein an.</p>
+            <div class="kf-fields">
+              <input type="text" id="kfName" placeholder="Name, z. B. Nachbar Ahmed oder Bäckerei Klein" maxlength="60">
+              <input type="text" id="kfWo" placeholder="Woher? (optional)" maxlength="40">
+              <button type="button" class="btn btn-green" id="kfAdd">Hinzufügen</button>
+            </div>
+            <p class="kf-hint-small">Kein Grund zu zögern — die Liste sieht niemand außer dir.</p>
+          </div>
+
+          <div class="kf-win" id="kfWin">
+            <h3>Du hast deinen ersten Kunden. 🎉</h3>
+            <p>Das ist der Moment, an dem aus einer Idee ein echtes Geschäft wird. Die meisten kommen nie hierhin — du schon. Jetzt: gute Arbeit abliefern und nach einer Empfehlung fragen.</p>
+          </div>
+        </div>
+      </section>
+
       <div class="c-actions">
         <button type="button" class="btn btn-ghost" id="copyBtn">Route kopieren</button>
         <button type="button" class="btn btn-ghost" id="printBtn">Drucken / als PDF sichern</button>
@@ -1406,6 +1534,7 @@ function renderCockpit(){
 
   updateProgress();
   setupWerkstatt(p);
+  renderKf();
   $('navCta').textContent = 'Meine Route';
   $('navCta').setAttribute('href', '#cockpit');
 }
@@ -1447,6 +1576,190 @@ async function explainStep(text, out){
   out.append(head, ol);
   out._loaded = true;
 }
+/* ========================= KUNDENFINDER ========================= */
+/* Psychologie: kleiner erster Schritt, fertige Nachricht (keine Denkarbeit),
+   sichtbarer Fortschritt, und Neins werden als Fortschritt umgedeutet. */
+
+function kfState(){
+  if(!state.kunden) state.kunden = { gestartet:false, orte:[], liste:[] };
+  return state.kunden;
+}
+
+async function kfStarten(){
+  const k = kfState();
+  $('kfStart').disabled = true;
+  $('kfBusy').hidden = false;
+  let orte = null;
+  try{
+    const reply = await callAI('[KUNDEN]\nIdee: ' + state.idea + '\nBranche: ' + (state.plan.branche || '') + '\nErster Kunde laut Route: ' + (state.plan.erster_kunde || ''));
+    const d = extractJSON(reply);
+    if(d && Array.isArray(d.orte) && d.orte.length) orte = d.orte.slice(0,6);
+  }catch(e){ /* Vorschau-Modus */ }
+  if(!orte){
+    orte = [
+      { titel:'Dein eigenes Umfeld', text:'Geh deine WhatsApp-Kontakte durch. Wer könnte dein Angebot selbst brauchen — oder jemanden kennen, der es braucht?' },
+      { titel:'Läden in deiner Nähe', text:'Geschäfte im Umkreis, die zu deiner Idee passen. Persönlich reingehen wirkt stärker als jede Mail.' },
+      { titel:'Lokale Facebook-Gruppen', text:'Suche nach Gruppen deiner Stadt. Dort fragen Leute täglich nach genau solchen Angeboten.' },
+      { titel:'Wer schon zahlt', text:'Wer gibt heute schon Geld für etwas Ähnliches aus? Die sind am leichtesten zu überzeugen.' }
+    ];
+  }
+  k.orte = orte; k.gestartet = true;
+  saveState();
+  $('kfBusy').hidden = true;
+  $('kfIntro').hidden = true;
+  $('kfBody').hidden = false;
+  renderKf();
+  toast('Kundenfinder ist bereit.');
+}
+
+function kfAddKontakt(){
+  const name = $('kfName').value.trim();
+  if(!name){ $('kfName').focus(); return; }
+  const k = kfState();
+  k.liste.push({ id:'k'+Date.now()+Math.random().toString(36).slice(2,6), name, wo:$('kfWo').value.trim(), status:'offen', msg:'' });
+  $('kfName').value = ''; $('kfWo').value = '';
+  saveState(); renderKf();
+  toast(k.liste.length === 1 ? 'Erster Kontakt steht. Der schwerste Teil ist geschafft.' : 'Kontakt hinzugefügt.');
+}
+
+function kfSetStatus(id, status){
+  const k = kfState();
+  const c = k.liste.find(x => x.id === id); if(!c) return;
+  c.status = status;
+  saveState(); renderKf();
+  if(status === 'ja') toast('Ein Ja! Das ist dein Durchbruch.');
+  else if(status === 'geschickt') toast('Raus damit. Jetzt heißt es abwarten.');
+  else if(status === 'nein') toast('Ein Nein weniger bis zum Ja.');
+}
+
+async function kfNachricht(id, box){
+  const k = kfState();
+  const c = k.liste.find(x => x.id === id); if(!c) return;
+  if(box.classList.contains('show') && c.msg){ box.classList.remove('show'); return; }
+  box.classList.add('show');
+
+  if(!c.msg){
+    box.innerHTML = '<p class="mbusy">navo schreibt die Nachricht …</p>';
+    let txt = null;
+    try{
+      const reply = await callAI('[NACHRICHT]\nIdee: ' + state.idea + '\nBranche: ' + (state.plan.branche || '') +
+        '\nKontakt: ' + c.name + (c.wo ? ' (' + c.wo + ')' : ''));
+      const d = extractJSON(reply);
+      if(d && d.nachricht) txt = d.nachricht;
+    }catch(e){ /* Vorschau */ }
+    if(!txt){
+      txt = 'Hallo ' + c.name + ',\n\nich starte gerade etwas Eigenes: ' + state.idea +
+        '\n\nIch suche die ersten Kunden und dachte sofort an dich. Hättest du kurz Zeit, dass ich dir zeige, was ich anbiete? ' +
+        'Wenn es für dich nichts ist, sag ruhig ehrlich Bescheid — dann kennst du vielleicht jemanden, für den es passt.\n\nDanke dir!';
+    }
+    c.msg = txt; saveState();
+  }
+
+  box.innerHTML = '';
+  const p = document.createElement('div'); p.className = 'mtxt'; p.textContent = c.msg;
+  const foot = document.createElement('div'); foot.className = 'mfoot';
+
+  const copy = document.createElement('button');
+  copy.type = 'button'; copy.className = 'kf-btn go'; copy.textContent = 'Nachricht kopieren';
+  copy.addEventListener('click', () => {
+    navigator.clipboard.writeText(c.msg).then(() => toast('Kopiert — jetzt einfach einfügen und abschicken.'));
+  });
+  const neu = document.createElement('button');
+  neu.type = 'button'; neu.className = 'kf-btn'; neu.textContent = 'Andere Formulierung';
+  neu.addEventListener('click', () => { c.msg = ''; saveState(); box.classList.remove('show'); kfNachricht(id, box); });
+
+  foot.append(copy, neu);
+  box.append(p, foot);
+}
+
+function renderKf(){
+  const k = kfState();
+  if(!k.gestartet){ $('kfIntro').hidden = false; $('kfBody').hidden = true; return; }
+  $('kfIntro').hidden = true; $('kfBody').hidden = false;
+
+  // Fundorte
+  const ob = $('kfOrte'); ob.innerHTML = '';
+  k.orte.forEach(o => {
+    const d = document.createElement('div'); d.className = 'kf-ort';
+    const b = document.createElement('b'); b.textContent = o.titel || '';
+    const s = document.createElement('span'); s.textContent = o.text || '';
+    d.append(b, s); ob.appendChild(d);
+  });
+
+  // Zahlen
+  const total = k.liste.length;
+  const geschickt = k.liste.filter(c => c.status !== 'offen').length;
+  const interesse = k.liste.filter(c => c.status === 'interesse').length;
+  const ja = k.liste.filter(c => c.status === 'ja').length;
+  const nein = k.liste.filter(c => c.status === 'nein').length;
+  $('kfNKontakte').textContent = total;
+  $('kfNGeschickt').textContent = geschickt;
+  $('kfNInteresse').textContent = interesse;
+  $('kfNJa').textContent = ja;
+
+  // Neins umdeuten: kein Scheitern, sondern Fortschritt
+  const nn = $('kfNeinNote');
+  if(nein > 0 && ja === 0){
+    nn.hidden = false;
+    nn.innerHTML = '<b>' + nein + ' ' + (nein === 1 ? 'Nein' : 'Neins') + ' gesammelt.</b> Das ist kein Rückschlag — das ist die Arbeit. Auch erfahrene Verkäufer hören viele Neins pro Ja. Jedes Nein bringt dich näher ans erste Ja.';
+  } else { nn.hidden = true; }
+
+  // Liste
+  const lb = $('kfList'); lb.innerHTML = '';
+  if(total === 0){
+    const e = document.createElement('p');
+    e.style.cssText = 'font-size:.93rem;color:var(--ink-faint);padding:6px 0';
+    e.textContent = 'Noch keine Kontakte. Fang mit einer einzigen Person an — das reicht für heute.';
+    lb.appendChild(e);
+  }
+
+  const LABEL = { offen:'Noch nicht angeschrieben', geschickt:'Angeschrieben', interesse:'Interesse!', ja:'Sagt ja', nein:'Kein Interesse' };
+  k.liste.forEach(c => {
+    const it = document.createElement('div');
+    it.className = 'kf-item s-' + c.status;
+
+    const top = document.createElement('div'); top.className = 'kf-top';
+    const nm = document.createElement('div'); nm.className = 'kf-name';
+    nm.textContent = c.name;
+    if(c.wo){ const sm = document.createElement('small'); sm.textContent = c.wo; nm.appendChild(sm); }
+    const bd = document.createElement('span'); bd.className = 'kf-badge b-' + c.status; bd.textContent = LABEL[c.status] || '';
+    const del = document.createElement('button');
+    del.type = 'button'; del.className = 'kf-del'; del.textContent = '✕'; del.title = 'Kontakt entfernen';
+    del.addEventListener('click', () => {
+      k.liste = k.liste.filter(x => x.id !== c.id); saveState(); renderKf();
+    });
+    top.append(nm, bd, del);
+
+    const msgBox = document.createElement('div'); msgBox.className = 'kf-msg';
+
+    const acts = document.createElement('div'); acts.className = 'kf-acts';
+    const mk = (label, cls, fn) => { const b = document.createElement('button'); b.type='button'; b.className='kf-btn'+(cls?' '+cls:''); b.textContent=label; b.addEventListener('click', fn); return b; };
+
+    acts.appendChild(mk('Nachricht schreiben', 'go', () => kfNachricht(c.id, msgBox)));
+    if(c.status === 'offen'){
+      acts.appendChild(mk('Abgeschickt ✓', '', () => kfSetStatus(c.id, 'geschickt')));
+    } else {
+      if(c.status !== 'interesse') acts.appendChild(mk('Zeigt Interesse', '', () => kfSetStatus(c.id, 'interesse')));
+      if(c.status !== 'ja') acts.appendChild(mk('Sagt JA', 'yes', () => kfSetStatus(c.id, 'ja')));
+      if(c.status !== 'nein') acts.appendChild(mk('Kein Interesse', '', () => kfSetStatus(c.id, 'nein')));
+    }
+
+    it.append(top, acts, msgBox);
+    lb.appendChild(it);
+  });
+
+  // Nächste Aufforderung passt sich an (klein anfangen, dann steigern)
+  const ask = $('kfAsk');
+  if(total === 0) ask.innerHTML = '<b>Wer fällt dir als Erstes ein?</b> Eine einzige Person oder ein Laden reicht — fang klein an.';
+  else if(total < 3) ask.innerHTML = '<b>Gut. Wer noch?</b> Drei Kontakte sind ein guter Anfang für diese Woche.';
+  else if(total < 10) ask.innerHTML = '<b>Stark. Weiter so.</b> Zehn Kontakte sind erfahrungsgemäß genug für das erste Ja.';
+  else ask.innerHTML = '<b>Zehn und mehr — sehr gut.</b> Jetzt zählt nur noch: abschicken und nachfassen.';
+
+  $('kfWin').classList.toggle('show', ja > 0);
+}
+
+/* ================================================================= */
+
 function updateProgress(){
   const t = totalSteps(), d = doneSteps();
   $('pfill').style.width = (t ? Math.round(d/t*100) : 0) + '%';
@@ -1600,6 +1913,12 @@ $('copyBtn').addEventListener('click', async () => {
 $('printBtn').addEventListener('click', () => window.print());
 $('resetBtn').addEventListener('click', () => { if(state) deleteRoute(state.id); });
 $('ccNew').addEventListener('click', () => { ideaInput.focus(); ideaInput.scrollIntoView({behavior:'smooth', block:'center'}); });
+
+/* Kundenfinder */
+$('kfStart').addEventListener('click', kfStarten);
+$('kfAdd').addEventListener('click', kfAddKontakt);
+$('kfName').addEventListener('keydown', e => { if(e.key === 'Enter'){ e.preventDefault(); kfAddKontakt(); } });
+$('kfWo').addEventListener('keydown', e => { if(e.key === 'Enter'){ e.preventDefault(); kfAddKontakt(); } });
 $('noIdeaBack').addEventListener('click', () => {
   $('noIdea').hidden = true;
   cockpit.hidden = true;
