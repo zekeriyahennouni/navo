@@ -419,6 +419,8 @@
 
   /* Zahlen-Werkstatt: Erklärungen */
   .calc-intro{ font-size:.86rem; color:var(--ink-soft); background:var(--paper-2); border-radius:10px; padding:11px 13px; margin-bottom:14px; line-height:1.5; }
+  .calc-need{ font-size:.9rem; color:var(--green); font-weight:600; margin-top:10px; padding:10px 13px; background:var(--green-soft); border-radius:10px; }
+  .calc-need.warn-need{ color:#A94438; background:#F7E8E4; }
   .lbl-hint{ display:block; font-family:'Inter',sans-serif; font-weight:400; font-size:.76rem; color:var(--ink-faint); margin-top:1px; }
 
   /* Wegpunkt: "Wie mache ich das?" */
@@ -616,20 +618,45 @@
 
           <div class="card">
             <h3>Zahlen-Werkstatt</h3>
-            <p class="sub">Nur für dich — damit du weißt, was du mindestens verlangen musst. Deine Kunden sehen diese Rechnung nie.</p>
+            <p class="sub" id="werkstattSub">Nur für dich — damit du siehst, ob deine Preise sich rechnen. Deine Kunden sehen das nie.</p>
             <div class="tabs" role="tablist">
-              <button type="button" class="tab active" data-panel="pRate">Stundensatz</button>
+              <button type="button" class="tab tab-model active" data-panel="pRate" data-model="stundensatz" hidden>Stundensatz</button>
+              <button type="button" class="tab tab-model" data-panel="pMarge" data-model="marge" hidden>Gewinn pro Verkauf</button>
+              <button type="button" class="tab tab-model" data-panel="pPortion" data-model="portion" hidden>Gewinn pro Portion</button>
               <button type="button" class="tab" data-panel="pCap">Kapital</button>
               <button type="button" class="tab" data-panel="pKur">Kleinunternehmer</button>
             </div>
+
             <div class="panel active" id="pRate">
-              <p class="calc-intro">Kurz gesagt: Wir rechnen aus, welchen Preis pro Stunde du nehmen musst, damit am Monatsende genug für dich übrig bleibt — nach Kosten, Steuern und Absicherung. Trag einfach drei Zahlen ein:</p>
+              <p class="calc-intro">Kurz gesagt: Wir rechnen aus, welchen Preis pro Stunde du nehmen musst, damit am Monatsende genug für dich übrig bleibt — nach Kosten, Steuern und Absicherung.</p>
               <div class="f-row"><label for="rWunsch">Was möchtest du im Monat für dich verdienen? (€)</label><input type="number" id="rWunsch" value="2000" min="0" inputmode="numeric"></div>
               <div class="f-row"><label for="rKosten">Geschäftskosten pro Monat (€) <span class="lbl-hint">z. B. Material, Sprit, Werbung</span></label><input type="number" id="rKosten" value="200" min="0" inputmode="numeric"></div>
               <div class="f-row"><label for="rStunden">Stunden pro Woche, die du wirklich Kunden berechnen kannst <span class="lbl-hint">nicht Büro/Fahrt — nur bezahlte Arbeit</span></label><input type="number" id="rStunden" value="20" min="1" inputmode="numeric"></div>
               <div class="result-strip"><span class="k">So viel solltest du mindestens pro Stunde verlangen</span><span class="v" id="rOut">–</span></div>
               <p class="calc-note">Grobe Rechnung inkl. ~35 % Puffer für Steuern & Absicherung. Unter diesem Satz arbeitest du auf Dauer mit Verlust. Keine Steuerberatung.</p>
             </div>
+
+            <div class="panel" id="pMarge">
+              <p class="calc-intro">Beim Verkaufen zählt nicht der Preis, sondern was pro Verkauf übrig bleibt. Wir rechnen deinen Gewinn pro Artikel aus — und wie viele Verkäufe du im Monat brauchst.</p>
+              <div class="f-row"><label for="mVK">Verkaufspreis pro Artikel (€)</label><input type="number" id="mVK" value="30" min="0" inputmode="numeric"></div>
+              <div class="f-row"><label for="mEK">Einkaufspreis pro Artikel (€) <span class="lbl-hint">was dich der Artikel selbst kostet</span></label><input type="number" id="mEK" value="12" min="0" inputmode="numeric"></div>
+              <div class="f-row"><label for="mFee">Gebühren & Versand pro Verkauf (€) <span class="lbl-hint">Plattform, Verpackung, Versand</span></label><input type="number" id="mFee" value="5" min="0" inputmode="numeric"></div>
+              <div class="f-row"><label for="mZiel">Was möchtest du im Monat verdienen? (€)</label><input type="number" id="mZiel" value="1500" min="0" inputmode="numeric"></div>
+              <div class="result-strip"><span class="k">Gewinn pro Verkauf</span><span class="v" id="mOut">–</span></div>
+              <p class="calc-need" id="mNeed"></p>
+              <p class="calc-note">Grobe Rechnung. Achte darauf, dass Gebühren und Versand oft unterschätzt werden. Keine Steuerberatung.</p>
+            </div>
+
+            <div class="panel" id="pPortion">
+              <p class="calc-intro">In der Gastro entscheidet die Kalkulation pro Portion. Wir rechnen aus, was du pro Portion verdienst — und wie viele du im Monat verkaufen musst.</p>
+              <div class="f-row"><label for="poVK">Verkaufspreis pro Portion (€)</label><input type="number" id="poVK" value="8" min="0" inputmode="numeric"></div>
+              <div class="f-row"><label for="poKost">Zutaten & Verpackung pro Portion (€)</label><input type="number" id="poKost" value="3" min="0" inputmode="numeric"></div>
+              <div class="f-row"><label for="poZiel">Was möchtest du im Monat verdienen? (€)</label><input type="number" id="poZiel" value="1500" min="0" inputmode="numeric"></div>
+              <div class="result-strip"><span class="k">Gewinn pro Portion</span><span class="v" id="poOut">–</span></div>
+              <p class="calc-need" id="poNeed"></p>
+              <p class="calc-note">Standmiete und Fahrt sind hier noch nicht drin — die gehören in den Kapital-Rechner. Keine Steuerberatung.</p>
+            </div>
+
             <div class="panel" id="pCap">
               <p class="calc-intro">Damit du weißt, wie viel Geld du zum Start brauchst, bis die ersten Einnahmen kommen.</p>
               <div class="f-row"><label for="cFix">Fixkosten pro Monat (€) <span class="lbl-hint">was jeden Monat sicher anfällt</span></label><input type="number" id="cFix" value="400" min="0" inputmode="numeric"></div>
@@ -1092,7 +1119,7 @@ function demoPlan(idea){
   const zeit = d.ampel === 'gruen' ? '4–8 Wochen' : d.ampel === 'rot' ? '8–16 Wochen' : '6–12 Wochen';
   return {
     titel:'Deine Route: ' + d.name,
-    branche:d.branche, ampel:d.ampel,
+    branche:d.branche, ampel:d.ampel, rechner:rechnerFromKey(detectKey(idea)),
     briefing:'Okay — ' + d.einsch.charAt(0).toLowerCase() + d.einsch.slice(1) + ' Ich hab dir daraus eine klare Route gebaut. Fang oben beim ersten Schritt an, der Rest ergibt sich Wegpunkt für Wegpunkt.',
     zeitrahmen:zeit,
     erster_schritt_jetzt:d.klar1,
@@ -1323,6 +1350,7 @@ function renderCockpit(){
   });
 
   updateProgress();
+  setupWerkstatt(p);
   $('navCta').textContent = 'Meine Route';
   $('navCta').setAttribute('href', '#cockpit');
 }
@@ -1544,6 +1572,34 @@ function calcRate(){
   const satz = Math.ceil(brutto / (h * 4.33));
   $('rOut').textContent = fmtEUR(satz) + ' / Std.';
 }
+function calcMarge(){
+  const vk = +$('mVK').value || 0, ek = +$('mEK').value || 0, fee = +$('mFee').value || 0, ziel = +$('mZiel').value || 0;
+  const gewinn = vk - ek - fee;
+  const need = $('mNeed');
+  $('mOut').textContent = fmtEUR(gewinn);
+  if(gewinn <= 0){
+    need.className = 'calc-need warn-need';
+    need.textContent = 'Achtung: So machst du pro Verkauf Verlust. Setz den Verkaufspreis höher oder senke Einkauf und Gebühren.';
+  } else {
+    need.className = 'calc-need';
+    const stk = Math.ceil(ziel / gewinn);
+    need.textContent = 'Für ' + fmtEUR(ziel) + ' im Monat brauchst du ca. ' + stk.toLocaleString('de-DE') + ' Verkäufe (rund ' + Math.ceil(stk/30) + ' pro Tag).';
+  }
+}
+function calcPortion(){
+  const vk = +$('poVK').value || 0, kost = +$('poKost').value || 0, ziel = +$('poZiel').value || 0;
+  const gewinn = vk - kost;
+  const need = $('poNeed');
+  $('poOut').textContent = fmtEUR(gewinn);
+  if(gewinn <= 0){
+    need.className = 'calc-need warn-need';
+    need.textContent = 'Achtung: So machst du pro Portion Verlust. Preis höher oder Zutaten/Verpackung günstiger.';
+  } else {
+    need.className = 'calc-need';
+    const stk = Math.ceil(ziel / gewinn);
+    need.textContent = 'Für ' + fmtEUR(ziel) + ' im Monat brauchst du ca. ' + stk.toLocaleString('de-DE') + ' Portionen (rund ' + Math.ceil(stk/26) + ' pro Verkaufstag).';
+  }
+}
 function calcCap(){
   const f = +$('cFix').value || 0, m = +$('cMon').value || 0, e = +$('cEinmal').value || 0;
   $('cOut').textContent = fmtEUR(Math.round(f * m * 1.15 + e));
@@ -1560,10 +1616,43 @@ function calcKur(){
     box.textContent = 'Eher nicht: Bei ' + fmtEUR(u) + ' liegst du über der 25.000-€-Grenze. Dann gilt die normale Umsatzsteuer — kein Problem, aber plane die Buchhaltung mit ein.';
   }
 }
+
+/* Welcher Modell-Rechner passt zur Idee? */
+function rechnerFromKey(key){
+  if(key === 'shop' || key === 'autohandel') return 'marge';
+  if(key === 'gastro') return 'portion';
+  return 'stundensatz'; // reinigung, agentur, handwerk, sonstiges
+}
+/* Zeigt genau den passenden Modell-Rechner (navo entscheidet, keine Auswahl nötig) */
+function setupWerkstatt(plan){
+  const valid = ['stundensatz','marge','portion'];
+  let modell = (plan && valid.indexOf(plan.rechner) >= 0) ? plan.rechner : rechnerFromKey(detectKey(state.idea));
+
+  // Nur den passenden Modell-Tab sichtbar machen
+  const modelTabs = document.querySelectorAll('.tab-model');
+  let activeTab = null;
+  modelTabs.forEach(t => {
+    const match = t.dataset.model === modell;
+    t.hidden = !match;
+    if(match) activeTab = t;
+  });
+  // Alle Tabs/Panels zurücksetzen, dann den passenden Modell-Tab aktiv
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  if(activeTab){
+    activeTab.classList.add('active');
+    $(activeTab.dataset.panel).classList.add('active');
+  }
+  // Ergebnis sofort berechnen, damit direkt eine Antwort dasteht
+  calcRate(); calcMarge(); calcPortion(); calcCap(); calcKur();
+}
+
 ['rWunsch','rKosten','rStunden'].forEach(id => $(id).addEventListener('input', calcRate));
+['mVK','mEK','mFee','mZiel'].forEach(id => $(id).addEventListener('input', calcMarge));
+['poVK','poKost','poZiel'].forEach(id => $(id).addEventListener('input', calcPortion));
 ['cFix','cMon','cEinmal'].forEach(id => $(id).addEventListener('input', calcCap));
 $('kUmsatz').addEventListener('input', calcKur);
-calcRate(); calcCap(); calcKur();
+calcRate(); calcMarge(); calcPortion(); calcCap(); calcKur();
 
 /* --------------------------------- Pro ------------------------------- */
 if(PRO_LINK){

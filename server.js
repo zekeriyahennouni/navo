@@ -55,6 +55,11 @@ Genau dieses Schema:
 {"titel":"kurzer Routen-Name, z.B. Deine Route: Reinigungsfirma",
 "branche":"kurz, 1-3 Woerter",
 "ampel":"gruen" oder "gelb" oder "rot",
+"rechner":"welcher Zahlen-Rechner zum Geschaeftsmodell passt. Genau einer von:
+  'stundensatz' (Dienstleistung/Handwerk/Reinigung/Beratung - man verkauft Zeit),
+  'marge' (Handel/Onlineshop/Autohandel - man kauft ein und verkauft weiter),
+  'portion' (Gastro/Foodtruck/Catering - man verkauft einzelne Portionen).
+  Waehle den, der am besten passt. Im Zweifel 'stundensatz'.",
 "briefing":"2-3 Saetze, in denen du die Person DIREKT ansprichst (Du-Form) und
   auf IHRE konkrete Idee eingehst. Kein generischer Text - nimm ein Detail aus
   der Idee auf. Ehrlich und ermutigend zugleich. Das ist navos persoenliche
