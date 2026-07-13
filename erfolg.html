@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>navo — Dein erster Pinselstrich</title>
+<meta name="theme-color" content="#123B2E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green: #123B2E;
+  --green-dark: #0b2b21;
+  --green-soft: #1e5a45;
+  --cream: #F5EFE6;
+  --cream-dark: #eee5d4;
+  --ink: #1a1a1a;
+  --ink-soft: #4a4a4a;
+  --muted: #8a8a8a;
+  --border: #e2d9c8;
+  --danger: #a83a3a;
+  --shadow: 0 1px 2px rgba(0,0,0,0.04), 0 8px 24px rgba(18,59,46,0.06);
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--cream);
+  color: var(--ink);
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  font-size: 17px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 720px; margin: 0 auto; padding: 60px 24px; }
+h1, h2 {
+  font-family: "Fraunces", Georgia, serif;
+  font-weight: 600;
+  color: var(--green);
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  margin: 0 0 20px;
+}
+h1 { font-size: clamp(32px, 5vw, 44px); }
+h2 { font-size: 24px; margin-top: 32px; }
+p { margin: 0 0 16px; color: var(--ink-soft); }
+label {
+  display: block;
+  font-weight: 600;
+  color: var(--green);
+  margin-bottom: 8px;
+  margin-top: 24px;
+}
+textarea, input {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  font-family: inherit;
+  font-size: 16px;
+  background: white;
+  color: var(--ink);
+  outline: none;
+  resize: vertical;
+}
+textarea { min-height: 90px; }
+textarea:focus, input:focus { border-color: var(--green); }
+button {
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  padding: 16px 28px;
+  border-radius: 999px;
+  background: var(--green);
+  color: var(--cream);
+  margin-top: 24px;
+  transition: background 0.2s;
+}
+button:hover:not(:disabled) { background: var(--green-dark); }
+button:disabled { opacity: 0.5; cursor: not-allowed; }
+.result {
+  margin-top: 40px;
+  padding: 32px;
+  background: white;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  display: none;
+}
+.result.visible { display: block; }
+.result h2 {
+  font-size: 22px;
+  color: var(--green);
+  margin-top: 24px;
+  border-top: 1px solid var(--border);
+  padding-top: 24px;
+}
+.result h2:first-child { margin-top: 0; border-top: none; padding-top: 0; }
+.result p, .result li { color: var(--ink); }
+.result ol { padding-left: 24px; }
+.result li { margin-bottom: 8px; }
+.error { color: var(--danger); font-size: 15px; margin-top: 12px; }
+.spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(245,239,230,0.3);
+  border-top-color: var(--cream);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.footer-note {
+  margin-top: 60px;
+  padding: 24px;
+  background: var(--cream-dark);
+  border-radius: 12px;
+  font-size: 15px;
+  color: var(--ink-soft);
+}
+.footer-note strong { color: var(--green); }
+a { color: var(--green-soft); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Danke. Jetzt bekommst du deinen Zug.</h1>
+  <p>Drei kurze Fragen. Sei ehrlich – navo antwortet umso besser, je klarer du bist.</p>
+
+  <form id="form">
+    <label for="idee">Deine Idee in einem Satz</label>
+    <textarea id="idee" required maxlength="500" placeholder="Was hast du vor?"></textarea>
+
+    <label for="situation">Deine Situation gerade</label>
+    <textarea id="situation" required maxlength="500" placeholder="Wo stehst du heute? Zeit, Geld, Umfeld, Job – kurz gehalten."></textarea>
+
+    <label for="angst">Deine größte Angst beim Anfangen</label>
+    <textarea id="angst" required maxlength="500" placeholder="Ehrlich, ohne Filter."></textarea>
+
+    <button type="submit" id="submit-btn">Meinen Zug bekommen</button>
+    <div class="error" id="error"></div>
+  </form>
+
+  <div class="result" id="result"></div>
+
+  <div class="footer-note">
+    <strong>Wenn navo dir nicht wirklich weiterhilft:</strong> Schreib mir eine kurze Mail an <a href="mailto:hallo@navo.de">hallo@navo.de</a> mit deiner Bestell-Referenz, und du bekommst dein Geld zurück. Kein Formular, kein Verhör.
+  </div>
+</div>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const sessionId = params.get("session_id");
+
+if (!sessionId) {
+  document.querySelector(".wrap").innerHTML =
+    "<h1>Ups.</h1><p>Es sieht so aus, als wärst du hier ohne Bestellung gelandet. Geh zurück zur <a href='/'>Startseite</a>.</p>";
+}
+
+const form = document.getElementById("form");
+const btn = document.getElementById("submit-btn");
+const errorBox = document.getElementById("error");
+const resultBox = document.getElementById("result");
+
+form?.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  errorBox.textContent = "";
+  const idee = document.getElementById("idee").value.trim();
+  const situation = document.getElementById("situation").value.trim();
+  const angst = document.getElementById("angst").value.trim();
+  if (!idee || !situation || !angst) return;
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>navo denkt nach…';
+
+  try {
+    const res = await fetch("/api/pinselstrich", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ session_id: sessionId, idee, situation, angst })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "Fehler");
+    resultBox.innerHTML = renderMarkdown(data.antwort);
+    resultBox.classList.add("visible");
+    resultBox.scrollIntoView({ behavior: "smooth", block: "start" });
+  } catch (err) {
+    errorBox.textContent = err.message;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Meinen Zug bekommen";
+  }
+});
+
+// Very light markdown renderer for headings (##), numbered lists, and paragraphs.
+function renderMarkdown(text) {
+  const lines = text.split("\n");
+  let html = "";
+  let inList = false;
+  for (const raw of lines) {
+    const line = raw.trim();
+    if (!line) {
+      if (inList) { html += "</ol>"; inList = false; }
+      continue;
+    }
+    if (line.startsWith("## ")) {
+      if (inList) { html += "</ol>"; inList = false; }
+      html += `<h2>${escapeHtml(line.slice(3))}</h2>`;
+    } else if (/^\d+\.\s/.test(line)) {
+      if (!inList) { html += "<ol>"; inList = true; }
+      html += `<li>${escapeHtml(line.replace(/^\d+\.\s/, ""))}</li>`;
+    } else {
+      if (inList) { html += "</ol>"; inList = false; }
+      html += `<p>${escapeHtml(line)}</p>`;
+    }
+  }
+  if (inList) html += "</ol>";
+  return html;
+}
+function escapeHtml(s) {
+  return s.replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
+}
+</script>
+</body>
+</html>

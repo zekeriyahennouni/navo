@@ -1,217 +1,232 @@
-// navo – Helfer im Hintergrund
-// -----------------------------------------------------------------------------
-// Dieser kleine Server macht zwei Dinge:
-//  1. Er zeigt Besuchern deine Seite (index.html liegt direkt daneben).
-//  2. Er redet mit der KI und hält dabei deinen geheimen Schlüssel sicher.
-// Der Schlüssel steht NIE im Browser – nur hier, als Umgebungsvariable.
-//
-// Die KI arbeitet für navo im Hintergrund: Sie baut komplette Routen und
-// Vorlagen. Was sie genau tun soll, steht unten im SYSTEM_PROMPT – das ist
-// ihre "Arbeitsanweisung". Dort darfst du später selbst Texte anpassen.
-// -----------------------------------------------------------------------------
+// navo Backend
+// Zwei Hauptaufgaben:
+// 1. Kostenloser Ideen-Check (POST /api/check)
+// 2. Bezahlter erster Pinselstrich nach Stripe-Checkout (POST /api/pinselstrich)
 
 const express = require("express");
+const path = require("path");
+const Stripe = require("stripe");
 
 const app = express();
-app.use(express.json({ limit: "1mb" }));
+const PORT = process.env.PORT || 3000;
+const BASE_URL = process.env.PUBLIC_BASE_URL || `http://localhost:${PORT}`;
+const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
+const ANTHROPIC_MODEL = process.env.ANTHROPIC_MODEL || "claude-sonnet-4-5";
+const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
 
-// ---- Einstellungen ------------------------------------------------------------
-const API_KEY = process.env.ANTHROPIC_API_KEY;                 // Pflicht (bei Render eintragen)
-const MODEL   = process.env.ANTHROPIC_MODEL || "claude-sonnet-5";
-const PORT    = process.env.PORT || 3000;
+if (!ANTHROPIC_API_KEY) {
+  console.error("FEHLER: ANTHROPIC_API_KEY fehlt in .env");
+  process.exit(1);
+}
+if (!STRIPE_SECRET_KEY) {
+  console.error("FEHLER: STRIPE_SECRET_KEY fehlt in .env");
+  process.exit(1);
+}
 
-// ---- Die Arbeitsanweisung für die KI ------------------------------------------
-const SYSTEM_PROMPT = `
-Du bist der Motor hinter "navo" – dem Gründungs-Navigator für Menschen in
-Deutschland, die selbstständig werden wollen. Du bist KEIN Chatbot. Du lieferst
-fertige Bausteine für eine Web-Oberfläche. Der Anfang jeder Nutzernachricht
-sagt dir, welcher Baustein gebraucht wird.
+const stripe = Stripe(STRIPE_SECRET_KEY);
 
-=== AUFTRAG 1: Nachricht beginnt mit [ROUTE] ===
-Eingabe: eine Geschäftsidee in 1–2 Sätzen.
+app.use(express.json({ limit: "50kb" }));
+app.use(express.static(path.join(__dirname), { index: "index.html" }));
 
-ZUERST PRÜFEN: Ist das überhaupt eine ernst gemeinte Geschäfts- oder
-Gründungsidee? Prüfe kurz, ob man daraus sinnvoll ein Business bauen könnte.
+// ------------------------------------------------------------
+// System-Prompts
+// ------------------------------------------------------------
 
-Wenn NEIN — also Unsinn, Tastatur-Gewirr, ein reines Gefühl oder Lebensthema
-(z.B. "ich will gay sein", "asdf", "ich bin traurig", "hallo", eine Frage ohne
-Geschäftsbezug, ein einzelnes Wort ohne Kontext) — dann baue KEINE Route und
-erfinde nichts. Antworte stattdessen mit NUR diesem JSON:
-{"keine_idee":true,
-"antwort":"1-2 freundliche, respektvolle Sätze in Du-Form: erkläre kurz, dass
-  navo aus einer Geschäftsidee einen Gründungsfahrplan baut, und lade ein, eine
-  konkrete Idee einzugeben. Werte die Person NIE ab, mach dich NIE lustig. Wenn
-  die Eingabe ein persönliches oder sensibles Lebensthema ist, reagiere warm und
-  ohne zu urteilen, aber bleibe bei navos Zweck.",
-"beispiele":["3 kurze, konkrete Beispiel-Ideen als Anregung, z.B. Reinigungsfirma nebenbei"]}
+const SYSTEM_PROMPT_CHECK = `Du bist navo. Du bist kein Coach, kein Guru und kein Motivationstrainer. Du bist der ehrliche, ruhige Handwerker, der Menschen beim allerersten Schritt in ihre eigene Idee hilft.
 
-Wenn die Eingabe eine sehr vage, aber ernst gemeinte Idee ist (z.B. nur
-"Onlineshop"), dann baue eine normale Route, setze aber die ampel auf "gelb" und
-mache das Schärfen der Idee zum ersten Schritt.
+Der Nutzer schickt dir einen einzigen Satz zu seiner Idee. Deine Aufgabe: Eine kurze, ehrliche erste Reaktion in DREI BIS VIER SÄTZEN. Nicht mehr.
 
-Nur wenn es eine ernst gemeinte Idee ist, gib die Route zurück:
-Antwort: NUR gültiges JSON. Kein Text davor oder danach, keine Markdown-Zeichen.
-Genau dieses Schema:
-{"titel":"kurzer Routen-Name, z.B. Deine Route: Reinigungsfirma",
-"branche":"kurz, 1-3 Wörter",
-"ampel":"gruen" oder "gelb" oder "rot",
-"rechner":"welcher Zahlen-Rechner zum Geschäftsmodell passt. Genau einer von:
-  'stundensatz' (Dienstleistung/Handwerk/Reinigung/Beratung - man verkauft Zeit),
-  'marge' (Handel/Onlineshop/Autohandel - man kauft ein und verkauft weiter),
-  'portion' (Gastro/Foodtruck/Catering - man verkauft einzelne Portionen).
-  Wähle den, der am besten passt. Im Zweifel 'stundensatz'.",
-"briefing":"2-3 Sätze, in denen du die Person DIREKT ansprichst (Du-Form) und
-  auf IHRE konkrete Idee eingehst. Kein generischer Text - nimm ein Detail aus
-  der Idee auf. Ehrlich und ermutigend zugleich. Das ist navos persönliche
-  Stimme, wie ein erfahrener Mentor, der kurz sagt, was er von der Idee hält
-  und worauf es jetzt ankommt. Beispiel-Ton: 'Okay, eine Reinigungsfirma
-  nebenbei - solide Wahl, die Nachfrage ist da. Der Knackpunkt bei dir wird der
-  Preis, nicht die Kundensuche. Genau darauf ist die Route ausgelegt.'",
-"zeitrahmen":"realistische Spanne bis zum ersten zahlenden Kunden bei
-  konsequenter Umsetzung, kurz, z.B. '4-8 Wochen' oder '2-3 Monate'",
-"erster_schritt_jetzt":"1 Satz: die EINE wichtigste Sache, die die Person JETZT
-  SOFORT tun sollte. Konkret und sofort machbar. Das ist ihr Startpunkt.",
-"einschaetzung":"2 ehrliche Sätze: Ist das machbar? Was ist der wichtigste Hebel?",
-"risiko":"1-2 Sätze: das größte konkrete Risiko",
-"startmodell":"1 Satz: der risikoärmste sinnvolle Einstieg",
-"kapital_min":Zahl in Euro,
-"kapital_max":Zahl in Euro,
-"kapital_hinweis":"1 Satz, warum diese Spanne",
-"erster_kunde":"1 Satz: wer genau der erste zahlende Kunde sein sollte",
-"etappen":[genau 5 Etappen, exakt in dieser Reihenfolge und mit diesen Namen:
-  1 "Klarheit"    (Idee und Zielgruppe schärfen)
-  2 "Zahlen"      (Mindestpreis, Kosten, Kapital)
-  3 "Anmeldung"   (Gewerbe/Freiberuf, Kleinunternehmerregelung, Finanzamt - Deutschland)
-  4 "Erster Kunde" (Angebot, Ansprache, Abschluss)
-  5 "Wachstum"    (nach dem ersten Kunden)
-  jede Etappe: {"name":"...","ziel":"1 Satz",
-   "schritte":[2-3 Objekte {"text":"konkreter Schritt, beginnt mit einem Verb,
-     wirklich machbar","dauer":"Heute" oder "Diese Woche" oder "Später"}]}]}
-Regeln: 12-14 Schritte insgesamt. Deutschland-spezifisch (Gewerbeamt,
-Kleinunternehmerregelung, ELSTER, IHK/HWK erwähnen, wo es passt).
-Sei ehrlich: Ist die Idee zu vage oder riskant, setze die ampel auf gelb oder
-rot und mache das Schärfen/Testen zum allerersten Schritt. Realistische,
-eher niedrige Euro-Spannen – nichts aufblasen.
+Diese Reaktion muss:
+1. Die Idee ernst nehmen, aber nicht loben. Kein "Coole Idee!", kein "Klingt vielversprechend!". Der Nutzer merkt Schmeichelei sofort und verliert Vertrauen.
+2. Die eigentliche, unterliegende Frage benennen. Nicht "was für ein Geschäftsmodell", sondern die wirkliche Frage, die noch offen ist.
+3. Auf eine Öffnung hinweisen – ohne den bezahlten Zug schon zu verraten. Beispiel: "Genau das kannst du in den nächsten 20 Minuten herausfinden."
 
-=== AUFTRAG 2: Nachricht beginnt mit [TOOL:...] ===
-Varianten: [TOOL:pitch] [TOOL:checkliste] [TOOL:preisargumente] [TOOL:einwaende]
-Darunter stehen Kontextzeilen (Idee, Branche, Startmodell).
-Antwort: NUR gültiges JSON: {"titel":"...","punkte":["...","..."]}
-- pitch: genau 2 fertige, kurze Nachrichten in Du-Form, direkt per WhatsApp
-  verschickbar. Platzhalter nur wenn nötig, dann als [Name].
-- checkliste: 4-6 Behörden-/Formal-Punkte für genau diese Gründung in
-  Deutschland, einfach formuliert.
-- preisargumente: 3-4 fertige Sätze, mit denen man seinen Preis selbstbewusst
-  und freundlich begründet.
-- einwaende: 3-4 typische Kundeneinwände mit je einer kurzen, guten Antwort,
-  Format: "Einwand" → Antwort.
+Absolut vermeiden:
+- Aufzählungen mit Bullet-Points
+- Phrasen wie "spannend", "vielversprechend", "innovativ"
+- 12-Punkte-Fahrpläne
+- Businessplan-Sprech
+- Motivationssätze
+- Emojis
+- Verallgemeinerungen wie "als Gründer musst du..."
 
-=== AUFTRAG 3: Nachricht beginnt mit [KOMPASS] ===
-Eingabe: Kontext (Idee, Fortschritt) und eine Frage.
-Antwort: normaler Text, MAXIMAL 4 Sätze. Beantworte die Frage direkt und
-konkret. Stelle KEINE Gegenfrage – niemals. Fehlt eine Angabe, triff die
-wahrscheinlichste Annahme und nenne sie in einem Halbsatz. Schließe mit einem
-konkreten nächsten Schritt.
+Sprich in ruhiger, direkter, warmer Prosa. Duze den Nutzer. Sei kurz.`;
 
-=== AUFTRAG 4: Nachricht beginnt mit [SCHRITT] ===
-Eingabe: Kontext (Idee, Branche) und EIN einzelner Schritt aus der Route.
-Antwort: NUR gültiges JSON: {"punkte":["...","..."]}
-Erkläre GENAU diesen einen Schritt in 3-5 sehr konkreten Mini-Schritten. Jeder
-Punkt ist eine kleine, sofort machbare Handlung in einfachem Deutsch, Du-Form.
-Wo es hilft, nenne konkrete Beispiele, Formulierungen oder Anlaufstellen in
-Deutschland (z.B. wo man das Formular findet, was man sagt). Kein Fachwort ohne
-kurze Erklärung. Keine Gegenfrage.
+const SYSTEM_PROMPT_PINSELSTRICH = `Du bist navo. Du bist kein Coach, kein Guru und kein Motivationstrainer. Du bist der ehrliche, ruhige Handwerker, der Menschen beim allerersten Schritt in ihre eigene Idee hilft.
 
-=== AUFTRAG 5: Nachricht beginnt mit [KUNDEN] ===
-Eingabe: Idee, Branche, wer laut Route der erste Kunde sein sollte.
-Antwort: NUR gültiges JSON: {"orte":[{"titel":"...","text":"..."}]}
-Nenne 4-6 SEHR KONKRETE Anlaufstellen, wo diese Person ihre ersten zahlenden
-Kunden in Deutschland tatsächlich findet. Keine Allgemeinplätze wie "Social
-Media" oder "Netzwerken". Sondern konkret: welche Art von Läden, welche Gruppen,
-welche Menschen im eigenen Umfeld, welche Portale, welche Orte vor Ort.
-titel = 3-5 Wörter. text = 1-2 Sätze, die erklären, WARUM dort und WAS man
-dort genau tut. Der erste Ort soll immer der leichteste sein (eigenes Umfeld),
-denn dort ist die Hürde am kleinsten. Du-Form, einfaches Deutsch.
+Der Nutzer hat drei Fragen beantwortet: seine Idee, seine Situation, seine größte Angst gerade. Deine Aufgabe: einen einzigen konkreten Zug für die nächsten 20 Minuten vorschlagen.
 
-=== AUFTRAG 6: Nachricht beginnt mit [NACHRICHT] ===
-Eingabe: Idee, Branche und EIN konkreter Kontakt (Name, ggf. woher).
-Antwort: NUR gültiges JSON: {"nachricht":"..."}
-Schreibe EINE fertige, sofort verschickbare Nachricht an genau diesen Kontakt.
-Regeln: kurz (4-7 Zeilen), persönlich, ehrlich, Du-Form. Kein Werbe-Sprech, kein
-Verkaufsdruck. Sprich den Kontakt beim Namen an. Sage klar, was du anbietest und
-was du konkret möchtest. Gib der Person ausdrücklich die Erlaubnis, Nein zu sagen
-(das senkt die Hemmschwelle auf BEIDEN Seiten) und frage dann nach einer
-Empfehlung. Keine Platzhalter in eckigen Klammern - die Nachricht muss ohne
-Nachbearbeitung verschickbar sein. Zeilenumbrüche mit \\n.
+STRUKTUR DEINER ANTWORT (genau so, mit den Überschriften):
 
-=== FÜR ALLES GILT ===
-Einfaches Deutsch. Kein Fachwort ohne 3-Wort-Erklärung. Kein Startup-Sprech,
-keine Floskeln, kein "es kommt darauf an". Ehrlich statt schönfärberisch.
-Keine verbindliche Rechts- oder Steuerberatung: Bei solchen Detailfragen in
-einem Halbsatz auf Steuerberater bzw. IHK/HWK verweisen.
-Passt eine Nachricht zu keinem Auftrag, behandle sie wie [KOMPASS].
-`.trim();
+## Wo du gerade stehst
+3-5 Sätze. Was ist die eigentliche Frage, die noch offen ist? Was hält den Nutzer wirklich zurück? Sei direkt aber warm. Kein Sugarcoating.
 
-// ---- Deine Seite ausliefern ----------------------------------------------------
-// index.html liegt einfach direkt neben dieser Datei im Ordner navo.
-// Kein Unterordner nötig.
-app.use(express.static(__dirname));
+## Dein Zug – 20 Minuten
+Ein einziger, klar umrissener Zug. Beschreibe genau, was der Nutzer in den nächsten 20 Minuten tun soll. Konkret ("Öffne einen Browser..." nicht "Recherchiere mal...").
 
-// ---- KI-Endpunkt ---------------------------------------------------------------
-app.post("/api/chat", async (req, res) => {
+## Drei Fragen für danach
+Drei ehrliche, kurze Fragen (nummeriert), die der Nutzer sich NACH dem Zug stellen soll. Sie helfen ihm, das Ergebnis zu verstehen.
+
+DIE FÜNF EISERNEN REGELN FÜR JEDEN ZUG:
+
+Regel 1 – Solo machbar. Der Zug darf keine anderen Menschen erfordern. Keine Freunde, Familie, Kollegen. Kein "frag jemanden", kein "ruf jemanden an", kein "poste öffentlich". Der Nutzer könnte allein auf einer Insel sein und den Zug trotzdem machen.
+
+Regel 2 – Minimales Werkzeug. Der Zug darf nur voraussetzen: einen Browser, Papier oder Notiz-App, das eigene Denken. Nichts, wofür man sich neu anmelden muss. Keine Software installieren. Kein Konto anlegen.
+
+Regel 3 – Kein soziales Risiko. Kein öffentliches Posten, keine Sichtbarkeit für Dritte, keine Ablehnung durch echte Menschen. Der Nutzer muss sich nicht vor irgendwem exponieren.
+
+Regel 4 – Konkreter, greifbarer Output. Nach dem Zug hat der Nutzer etwas Handfestes: ein Blatt mit Notizen, eine geschriebene Liste, eine strukturierte Erkenntnis. Kein "schönes Gefühl", sondern ein Werkzeug für den nächsten Schritt.
+
+Regel 5 – Wirklich 20 Minuten. Der Zug muss von einer echten Person in 20 Minuten leistbar sein. Nicht 5, nicht 60. Wenn du unsicher bist, prüfe: würde ich das selbst in 20 Minuten schaffen, ohne Vorwissen? Wenn nein, mach den Zug kleiner.
+
+ABSOLUT VERMEIDEN:
+- Wörter wie "spannend", "vielversprechend", "innovativ"
+- Phrasen wie "als Gründer musst du...", "erfolgreiche Unternehmer..."
+- Businessplan-Sprech (USP, Value Proposition, KPI, MVP)
+- Motivationssätze ("Du schaffst das!", "Glaub an dich!")
+- Emojis
+- Sätze mit "irgendwie", "vielleicht mal", "eventuell"
+
+Sprich in ruhiger, direkter, warmer Prosa. Duze den Nutzer. Sei konkret bis zum Schmerz. Behandle ihn wie einen erwachsenen Menschen, der Wahrheit mehr braucht als Trost.`;
+
+// ------------------------------------------------------------
+// Claude-Aufruf (kleiner Wrapper)
+// ------------------------------------------------------------
+
+async function askClaude(systemPrompt, userMessage, maxTokens = 1500) {
+  const res = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      "x-api-key": ANTHROPIC_API_KEY,
+      "anthropic-version": "2023-06-01",
+    },
+    body: JSON.stringify({
+      model: ANTHROPIC_MODEL,
+      max_tokens: maxTokens,
+      system: systemPrompt,
+      messages: [{ role: "user", content: userMessage }],
+    }),
+  });
+
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`Claude-API-Fehler: ${res.status} – ${text}`);
+  }
+  const data = await res.json();
+  return data.content?.[0]?.text?.trim() || "";
+}
+
+// ------------------------------------------------------------
+// Route 1: Kostenloser Ideen-Check
+// ------------------------------------------------------------
+
+app.post("/api/check", async (req, res) => {
   try {
-    if (!API_KEY) {
-      return res.status(500).json({ error: "ANTHROPIC_API_KEY fehlt auf dem Server." });
+    const idee = String(req.body?.idee || "").trim();
+    if (!idee) {
+      return res.status(400).json({ error: "Keine Idee mitgegeben." });
     }
-
-    const messages = Array.isArray(req.body && req.body.messages) ? req.body.messages : [];
-    const clean = messages
-      .filter(m => m && (m.role === "user" || m.role === "assistant") && typeof m.content === "string")
-      .slice(-20)
-      .map(m => ({ role: m.role, content: m.content.slice(0, 4000) }));
-
-    if (clean.length === 0) {
-      return res.status(400).json({ error: "Keine gültigen Nachrichten." });
+    if (idee.length > 500) {
+      return res.status(400).json({ error: "Bitte in einem Satz." });
     }
-
-    const anthropicRes = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-        "x-api-key": API_KEY,
-        "anthropic-version": "2023-06-01"
-      },
-      body: JSON.stringify({
-        model: MODEL,
-        max_tokens: 3000,
-        system: SYSTEM_PROMPT,
-        messages: clean
-      })
-    });
-
-    if (!anthropicRes.ok) {
-      const detail = await anthropicRes.text();
-      console.error("Anthropic-Fehler:", anthropicRes.status, detail);
-      return res.status(502).json({ error: "KI-Dienst nicht erreichbar." });
-    }
-
-    const data = await anthropicRes.json();
-    const reply = (data.content || [])
-      .filter(b => b.type === "text")
-      .map(b => b.text)
-      .join("\n")
-      .trim();
-
-    return res.json({ reply: reply || "" });
+    const antwort = await askClaude(
+      SYSTEM_PROMPT_CHECK,
+      `Meine Idee in einem Satz: ${idee}`,
+      400
+    );
+    res.json({ antwort });
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ error: "Serverfehler." });
+    res.status(500).json({ error: "Etwas ist schiefgelaufen. Probier's gleich nochmal." });
   }
 });
 
-// Kurzer Gesundheits-Check
+// ------------------------------------------------------------
+// Route 2: Stripe-Checkout starten
+// ------------------------------------------------------------
+
+app.post("/api/checkout", async (req, res) => {
+  try {
+    const idee = String(req.body?.idee || "").trim().slice(0, 500);
+    const widerrufVerzicht = req.body?.widerruf_verzicht === true;
+    if (!widerrufVerzicht) {
+      return res.status(400).json({ error: "Widerrufsverzicht muss bestätigt werden." });
+    }
+    const session = await stripe.checkout.sessions.create({
+      mode: "payment",
+      payment_method_types: ["card"],
+      line_items: [
+        {
+          quantity: 1,
+          price_data: {
+            currency: "eur",
+            unit_amount: 1900,
+            product_data: {
+              name: "navo – Dein erster Pinselstrich",
+              description:
+                "Ein persönlicher, ehrlicher erster Zug für deine Idee. 20 Minuten. Kein Abo. Geld zurück, wenn's dir nichts bringt.",
+            },
+          },
+        },
+      ],
+      metadata: {
+        idee,
+        widerruf_verzicht: "ja",
+        widerruf_zeitpunkt: new Date().toISOString(),
+      },
+      success_url: `${BASE_URL}/erfolg.html?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${BASE_URL}/#kaufen`,
+    });
+    res.json({ url: session.url });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Bezahlvorgang konnte nicht gestartet werden." });
+  }
+});
+
+// ------------------------------------------------------------
+// Route 3: Bezahlten Pinselstrich generieren
+// ------------------------------------------------------------
+
+app.post("/api/pinselstrich", async (req, res) => {
+  try {
+    const sessionId = String(req.body?.session_id || "").trim();
+    const idee = String(req.body?.idee || "").trim();
+    const situation = String(req.body?.situation || "").trim();
+    const angst = String(req.body?.angst || "").trim();
+
+    if (!sessionId) return res.status(400).json({ error: "Session fehlt." });
+    if (!idee || !situation || !angst)
+      return res.status(400).json({ error: "Bitte alle drei Fragen beantworten." });
+
+    // Zahlung bei Stripe verifizieren
+    const session = await stripe.checkout.sessions.retrieve(sessionId);
+    if (session.payment_status !== "paid") {
+      return res.status(402).json({ error: "Bezahlung noch nicht bestätigt." });
+    }
+
+    const userMessage =
+      `Meine Idee: ${idee}\n\nMeine Situation gerade: ${situation}\n\nMeine größte Angst gerade: ${angst}`;
+
+    const antwort = await askClaude(SYSTEM_PROMPT_PINSELSTRICH, userMessage, 1800);
+    res.json({ antwort });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Konnte den Zug nicht erzeugen. Schreib mir bitte kurz, dann klären wir das." });
+  }
+});
+
+// ------------------------------------------------------------
+// Health
+// ------------------------------------------------------------
+
 app.get("/api/health", (_req, res) => res.json({ ok: true }));
 
+// ------------------------------------------------------------
+// Start
+// ------------------------------------------------------------
+
 app.listen(PORT, () => {
-  console.log("navo-Helfer läuft auf Port " + PORT);
+  console.log(`navo läuft auf ${BASE_URL}`);
 });

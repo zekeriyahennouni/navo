@@ -1,7 +1,7 @@
 {
   "name": "navo-backend",
   "version": "1.0.0",
-  "description": "Backend für navo – hält den Anthropic-API-Key sicher und liefert die KI-Antworten.",
+  "description": "navo – der Gründungs-Navigator. Backend hält den Anthropic-API-Key sicher, verarbeitet Zahlungen über Stripe und liefert die ersten Pinselstriche.",
   "main": "server.js",
   "type": "commonjs",
   "scripts": {
@@ -11,6 +11,7 @@
     "node": ">=18"
   },
   "dependencies": {
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "stripe": "^17.0.0"
   }
 }
