@@ -10,9 +10,15 @@
 <meta property="og:title" content="navo — Jeder Pinselstrich ist schon dein Bild">
 <meta property="og:description" content="Nicht der Businessplan-Generator, nicht der Motivationskurs. Nur ein einziger kleiner echter Zug – klein genug, dass er sich machbar anfühlt.">
 <meta property="og:locale" content="de_DE">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<meta property="og:url" content="https://navo-0cvg.onrender.com/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="navo — Jeder Pinselstrich ist schon dein Bild">
+<meta name="twitter:description" content="Beschreibe deine Idee in einem Satz. navo zeigt dir ehrlich, wo sie noch schwach ist – und welchen echten Schritt du als Nächstes machen kannst.">
+<link rel="canonical" href="https://navo-0cvg.onrender.com/">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.bunny.net">
+<link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
+<link href="https://fonts.bunny.net/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
   --green: #123B2E;
@@ -59,9 +65,32 @@ p.strong { color: var(--ink); }
 em, i { font-style: italic; color: var(--ink-soft); }
 
 /* HERO */
-.hero { padding: 80px 0 60px; }
-.hero h1 { margin-bottom: 24px; }
-.hero .lede { font-size: 19px; color: var(--ink-soft); max-width: 620px; margin-bottom: 40px; }
+.hero { padding: 72px 0 60px; }
+.hero .kicker {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--green-soft);
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+.hero h1 {
+  font-size: clamp(32px, 4.6vw, 52px);
+  line-height: 1.1;
+  margin-bottom: 20px;
+  max-width: 900px;
+}
+.hero .subhead {
+  font-family: "Fraunces", Georgia, serif;
+  font-style: italic;
+  font-size: clamp(19px, 2.2vw, 24px);
+  color: var(--green-soft);
+  margin-bottom: 32px;
+  max-width: 700px;
+  line-height: 1.4;
+}
+.hero .lede { font-size: 17px; color: var(--ink-soft); max-width: 620px; margin-bottom: 36px; }
 
 .check-form {
   background: white;
@@ -107,6 +136,34 @@ button:not(:disabled):active { transform: translateY(0); }
   justify-content: flex-end;
   margin-top: 16px;
 }
+.check-form .trust-line {
+  margin: 12px 0 0;
+  font-size: 13px;
+  color: var(--muted);
+  text-align: center;
+}
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Sichtbare Focus-States für Tastaturbedienung */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 2px;
+}
+.buy-box button:focus-visible,
+.buy-box a:focus-visible {
+  outline-color: var(--cream);
+}
 
 .check-result {
   margin-top: 24px;
@@ -140,6 +197,22 @@ button:not(:disabled):active { transform: translateY(0); }
 }
 .buy-box .btn-buy:hover:not(:disabled) { background: white; }
 .buy-box .fineprint { font-size: 13px; color: rgba(245,239,230,0.7); margin: 12px 0 0; }
+
+.buy-error {
+  margin-top: 12px;
+  padding: 0;
+  color: #ff9a9a;
+  font-size: 14px;
+  min-height: 0;
+  transition: min-height 0.2s;
+}
+.buy-error:not(:empty) {
+  padding: 10px 14px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 8px;
+  min-height: 20px;
+}
+.cta-final .buy-error { color: var(--danger); background: rgba(168,58,58,0.08); }
 
 .consent {
   display: flex;
@@ -221,6 +294,16 @@ section.alt { background: var(--cream-dark); }
 }
 .example h3 { color: var(--green); margin-top: 24px; }
 .example p { color: var(--ink); }
+.zug-steps { padding-left: 20px; margin: 12px 0 20px; color: var(--ink); }
+.zug-steps li { margin-bottom: 12px; line-height: 1.55; }
+.zug-outcome {
+  margin: 20px 0 0;
+  padding: 16px 20px;
+  background: rgba(18,59,46,0.05);
+  border-left: 3px solid var(--green);
+  border-radius: 6px;
+  color: var(--ink);
+}
 
 .founder {
   padding: 60px 0;
@@ -334,6 +417,28 @@ footer a:hover { text-decoration: underline; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
 .error { color: var(--danger); font-size: 14px; margin-top: 8px; }
+
+/* Scroll-Reveal: sanftes Einblenden beim Runterscrollen */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: none;
+}
+/* Kaskaden-Verzögerung für nebeneinander liegende Elemente */
+.reveal[data-delay="1"] { transition-delay: 0.1s; }
+.reveal[data-delay="2"] { transition-delay: 0.2s; }
+.reveal[data-delay="3"] { transition-delay: 0.3s; }
+/* Wer keine Animation möchte, sieht alles direkt */
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+}
 </style>
 </head>
 <body>
@@ -341,20 +446,24 @@ footer a:hover { text-decoration: underline; }
 <!-- ============ HERO ============ -->
 <section class="hero">
   <div class="wrap">
-    <h1>Jeder Pinselstrich<br>ist schon dein Bild.</h1>
-    <p class="lede">Du wartest nicht mehr auf den perfekten Moment. Erzähl navo in einem Satz, was du vorhast – und bekomm sofort eine ehrliche erste Reaktion. Kostenlos.</p>
+    <div class="kicker">Für alle, die eine Idee haben – und vor der ersten Hürde stehen.</div>
+    <h1>Jede scheinbar unmögliche Idee ist ein Pinselstrich auf der Leinwand deines Lebens.</h1>
+    <p class="subhead">Und du allein entscheidest, wie das Meisterwerk am Ende aussieht.</p>
+    <p class="lede">Beschreibe deine Idee in einem Satz. navo zeigt dir ehrlich, wo sie noch schwach ist – und welchen konkreten Schritt du als Nächstes machen kannst.</p>
 
-    <form class="check-form" id="check-form">
-      <textarea id="idea-input" placeholder="Meine Idee in einem Satz…" maxlength="400" rows="2"></textarea>
+    <form class="check-form" id="check-form" aria-label="Kostenloser Ideen-Check">
+      <label for="idea-input" class="sr-only">Deine Idee in einem Satz</label>
+      <textarea id="idea-input" placeholder="Ich möchte einen Onlineshop für nachhaltige Fitness-Kleidung aufbauen und über Instagram verkaufen..." maxlength="400" rows="2" aria-describedby="check-error"></textarea>
       <div class="row">
         <button type="submit" class="btn-secondary" id="check-btn">
-          Zeig mir, was navo denkt
+          Idee kostenlos prüfen
         </button>
       </div>
-      <div class="error" id="check-error"></div>
+      <div class="error" id="check-error" role="alert" aria-live="polite"></div>
+      <p class="trust-line">Kostenlos · Keine Anmeldung · Antwort in wenigen Sekunden</p>
     </form>
 
-    <div class="check-result" id="check-result"></div>
+    <div class="check-result" id="check-result" role="region" aria-live="polite" aria-label="navos Reaktion"></div>
 
     <div class="buy-box" id="buy-box">
       <p><strong>Willst du deinen echten ersten Zug?</strong><br>20 Minuten, direkt umsetzbar. 19 € einmalig. Falls navo dir nicht wirklich hilft, bekommst du dein Geld zurück – eine kurze Mail reicht.</p>
@@ -364,6 +473,7 @@ footer a:hover { text-decoration: underline; }
       </label>
       <button class="btn-buy" id="buy-btn" disabled>Mein erster Pinselstrich – 19 €</button>
       <p class="fineprint">Zahlung über Stripe · Kein Abo · Keine versteckten Kosten</p>
+      <div class="buy-error" id="buy-error" role="alert" aria-live="polite"></div>
     </div>
   </div>
 </section>
@@ -371,37 +481,37 @@ footer a:hover { text-decoration: underline; }
 <!-- ============ SPIEGEL ============ -->
 <section class="alt mirror">
   <div class="wrap">
-    <h2>Du kennst das.</h2>
-    <p class="strong">Du hast eine Idee im Kopf, seit Monaten. Vielleicht länger.</p>
-    <p class="strong">Du scrollst durch Reels, in denen andere „schon soweit" sind.</p>
-    <p class="strong">Du weißt, dass du auch könntest – irgendwie, irgendwann.</p>
+    <h2 class="reveal">Du kennst das.</h2>
+    <p class="strong reveal">Du hast eine Idee im Kopf, seit Monaten. Vielleicht länger.</p>
+    <p class="strong reveal">Du scrollst durch Reels, in denen andere „schon soweit" sind.</p>
+    <p class="strong reveal">Du weißt, dass du auch könntest – irgendwie, irgendwann.</p>
 
-    <p>Aber jedes Mal, wenn du wirklich anfangen willst, kommt derselbe Gedanke:</p>
+    <p class="reveal">Aber jedes Mal, wenn du wirklich anfangen willst, kommt derselbe Gedanke:</p>
 
-    <div class="quote">„Was, wenn ich die falsche Idee wähle. Was, wenn es nicht klappt. Was, wenn alle sehen, dass ich gescheitert bin."</div>
+    <div class="quote reveal">„Was, wenn ich die falsche Idee wähle. Was, wenn es nicht klappt. Was, wenn alle sehen, dass ich gescheitert bin."</div>
 
-    <p>Also wartest du. Und der perfekte Moment kommt nie.</p>
+    <p class="reveal">Also wartest du. Und der perfekte Moment kommt nie.</p>
 
-    <p class="strong">navo ist für genau diesen Zustand gebaut. Kein Businessplan-Generator, kein Motivationskurs. Ein einziger kleiner echter Zug – klein genug, dass er sich machbar anfühlt. Konkret genug, dass danach etwas anders ist.</p>
+    <p class="strong reveal">navo ist für genau diesen Zustand gebaut. Kein Businessplan-Generator, kein Motivationskurs. Ein einziger echter Zug – klein genug, dass er sich machbar anfühlt. Konkret genug, dass sich für dich etwas verschiebt.</p>
   </div>
 </section>
 
 <!-- ============ WIE ES FUNKTIONIERT ============ -->
 <section>
   <div class="wrap wrap--wide">
-    <h2>So läuft dein erster Pinselstrich.</h2>
+    <h2 class="reveal">So läuft dein erster Pinselstrich.</h2>
     <div class="steps">
-      <div class="step">
+      <div class="step reveal" data-delay="1">
         <div class="num">1</div>
         <h3>Du erzählst.</h3>
         <p>Deine Idee, deine Situation, deine größte Angst gerade. Drei kurze Fragen. Fünf Minuten.</p>
       </div>
-      <div class="step">
+      <div class="step reveal" data-delay="2">
         <div class="num">2</div>
         <h3>navo antwortet.</h3>
         <p>Ehrlich, ohne Sugarcoating, ohne 12-Punkte-Fahrplan. Ein einziger konkreter Zug – zugeschnitten auf dich, nicht auf „alle Gründer".</p>
       </div>
-      <div class="step">
+      <div class="step reveal" data-delay="3">
         <div class="num">3</div>
         <h3>Du machst den Zug.</h3>
         <p>20 Minuten, jetzt gleich oder wenn du bereit bist. Kein Businessplan, keine Anmeldung, keine Website. Nur ein echter Schritt.</p>
@@ -413,17 +523,22 @@ footer a:hover { text-decoration: underline; }
 <!-- ============ BEISPIEL-ZUG ============ -->
 <section class="alt">
   <div class="wrap">
-    <h2>So sieht ein erster Pinselstrich aus.</h2>
+    <h2 class="reveal">So sieht ein erster Pinselstrich aus.</h2>
 
-    <div class="example">
+    <div class="example reveal">
       <div class="label">Beispiel-Idee</div>
-      <div class="idea">„Ich will was mit Sport und Ernährung machen, vielleicht Coaching. Weiß aber nicht, wie ich starten soll."</div>
+      <div class="idea">„Ich will einen Onlineshop starten – Dropshipping oder sowas – aber ich weiß nicht, welche Produkte ich verkaufen soll und wie ich Kunden finde."</div>
 
       <h3>navos ehrliche Reaktion</h3>
-      <p>Deine Idee ist nicht zu vage – sie ist nur noch nicht in der Sprache deiner Kunden geschrieben. Bevor du irgendein Angebot baust, brauchst du die echten Worte, mit denen deine Zielgruppe über ihr Problem redet. Nicht deine Worte. Ihre.</p>
+      <p>Deine Idee ist nicht zu vage – du fängst nur an der falschen Stelle an. Die Frage „welches Produkt" beantwortest du nicht am Schreibtisch. Du beantwortest sie dort, wo Menschen gerade impulsiv kaufen. Und du kannst da hinschauen, ohne selbst schon ein Produkt zu haben.</p>
 
       <h3>Dein Zug – 20 Minuten</h3>
-      <p>Öffne einen Browser. Such nach deiner Idee – aber nicht als Konzept, sondern als Frage, die dein Kunde googeln würde. Nicht „Ernährungscoaching", sondern „wie werde ich in 4 Wochen fitter" oder „warum halte ich Diäten nie durch". Klick dich durch die ersten Ergebnisse – nicht auf Werbung oder Anbieter-Seiten, sondern auf Kommentare, Reddit-Threads, Foren. Notier dir drei Dinge: die genauen Worte, mit denen echte Menschen über dieses Problem sprechen. Was sie an bestehenden Lösungen nicht mögen. Und welche Frage sie am häufigsten stellen. Nach 20 Minuten hast du echte Sprache aus dem Kopf deiner Kunden – statt Vermutungen aus deinem eigenen. Das ist der Rohstoff für alles, was du danach baust.</p>
+      <ol class="zug-steps">
+        <li><strong>Geh dorthin, wo dein Kunde gerade Geld ausgibt.</strong> Öffne TikTok und such nach den Hashtags <em>#tiktokmademebuyit</em> und <em>#amazonfinds</em>. Scroll 12 Minuten durch die viralen Videos der letzten Wochen.</li>
+        <li><strong>Notiere fünf Produkte,</strong> die dir mehrfach begegnen. Nicht die schrillsten – die, die realistisch nutzbar sind (Küche, Beauty, Alltag, Gadgets).</li>
+        <li><strong>Prüf sie in fünf Minuten.</strong> Kopier zwei bis drei Produktnamen in AliExpress. Wie viel kosten sie im Einkauf? Bei welchen könnte dein Aufschlag mindestens das Dreifache sein?</li>
+      </ol>
+      <p class="zug-outcome"><strong>Ergebnis nach 20 Minuten:</strong> Eine Liste mit zwei bis drei realistischen Testprodukten – mit echten Einkaufspreisen und einer Ahnung, was sie am Markt bringen. Statt der endlosen Frage „was verkaufe ich denn eigentlich?".</p>
     </div>
   </div>
 </section>
@@ -431,23 +546,22 @@ footer a:hover { text-decoration: underline; }
 <!-- ============ WER NAVO BAUT ============ -->
 <section class="founder">
   <div class="wrap">
-    <h2>Wer ist hinter navo?</h2>
+    <h2 class="reveal">Wer ist hinter navo?</h2>
 
-    <div class="founder-photo">
+    <div class="founder-photo reveal">
       <div class="photo-placeholder">Foto folgt</div>
     </div>
 
-    <p>Ich bin Zekeriya, 20 Jahre alt. Ich arbeite nebenbei und suche gerade selbst den Weg in die Selbstständigkeit.</p>
+    <p class="reveal">Ich bin Zekeriya, 20 Jahre alt. Ich arbeite nebenbei und suche gerade selbst den Weg in die Selbstständigkeit.</p>
 
-    <p>Ich kenne den Zustand, in dem man Angst hat, den ersten Fehler zu machen. In dem man nicht weiß, wie man anfängt – und keiner einen wirklich an die Hand nimmt. Man sieht überall Menschen, die mit ihrem Ziel in der Hand reden. Aber niemand zeigt dir den Weg dahin, wo man leidet und jemanden bräuchte, der einen auffängt.</p>
+    <p class="reveal">Ich kenne den Zustand, in dem man Angst hat, den ersten Fehler zu machen. In dem man nicht weiß, wie man anfängt – und keiner einen wirklich an die Hand nimmt. Man sieht überall Menschen, die mit ihrem Ziel in der Hand reden. Aber niemand zeigt dir den Weg dahin, wo man leidet und jemanden bräuchte, der einen auffängt.</p>
 
-    <p>navo ist der Begleiter, den ich mir gewünscht hätte. Kein Coach, der alles besser weiß. Sondern jemand, der dich fördert, dir Schritt für Schritt hilft – und irgendwann von hinten winkt, weil du gelernt hast, deine eigenen Schritte zu gehen.</p>
+    <p class="reveal">navo ist der Begleiter, den ich mir gewünscht hätte. Kein Coach, der alles besser weiß. Sondern jemand, der dich fördert, dir Schritt für Schritt hilft – und irgendwann von hinten winkt, weil du gelernt hast, deine eigenen Schritte zu gehen.</p>
 
-    <p class="signature">— Zekeriya</p>
+    <p class="signature reveal">— Zekeriya</p>
 
-    <p class="contact-line">
-      <a href="mailto:hallo@navo.de">hallo@navo.de</a>
-      <span class="contact-note">(E-Mail-Platzhalter — wird vor Live-Gang ersetzt)</span>
+    <p class="contact-line reveal">
+      <a href="mailto:zekeriyahennouni15@gmail.com">zekeriyahennouni15@gmail.com</a>
     </p>
   </div>
 </section>
@@ -455,9 +569,9 @@ footer a:hover { text-decoration: underline; }
 <!-- ============ WAS DU BEKOMMST ============ -->
 <section class="alt" id="kaufen">
   <div class="wrap">
-    <h2>Was du für 19 € bekommst.</h2>
+    <h2 class="reveal">Was du für 19 € bekommst.</h2>
     <div class="pricing">
-      <div class="box">
+      <div class="box reveal" data-delay="1">
         <h3>Drin ist</h3>
         <ul>
           <li>Dein persönlicher erster Zug, zugeschnitten auf deine Idee und Situation</li>
@@ -465,7 +579,7 @@ footer a:hover { text-decoration: underline; }
           <li>Drei Fragen zum Nachdenken, damit du verstehst, was du gerade gelernt hast</li>
         </ul>
       </div>
-      <div class="box negative">
+      <div class="box negative reveal" data-delay="2">
         <h3>Nicht drin</h3>
         <ul>
           <li>Kein Businessplan, kein 40-Seiten-PDF, keine Vorlagen-Sammlung</li>
@@ -474,7 +588,7 @@ footer a:hover { text-decoration: underline; }
         </ul>
       </div>
     </div>
-    <div class="guarantee">
+    <div class="guarantee reveal">
       Wenn navo dir nicht wirklich weiterhilft, bekommst du dein Geld zurück. Eine kurze Mail reicht – kein Formular, kein Verhör.
     </div>
   </div>
@@ -483,14 +597,15 @@ footer a:hover { text-decoration: underline; }
 <!-- ============ CTA FINAL ============ -->
 <section class="cta-final">
   <div class="wrap">
-    <h2>Bereit für deinen ersten Pinselstrich?</h2>
-    <p>Kein perfekter Moment. Kein Warten mehr.<br>Nur ein Satz – und in den nächsten 20 Minuten weißt du mehr über deine Idee als in den letzten sechs Monaten.</p>
+    <h2 class="reveal">Bereit für deinen ersten Pinselstrich?</h2>
+    <p class="reveal">Kein perfekter Moment. Kein Warten mehr.<br>Nur ein Satz – und in den nächsten 20 Minuten weißt du mehr über deine Idee als in den letzten sechs Monaten.</p>
     <label class="consent consent--center" for="consent-2">
       <input type="checkbox" id="consent-2">
       <span>Ich stimme ausdrücklich zu, dass mit der Erstellung meines persönlichen Zugs sofort begonnen wird. Ich weiß, dass ich damit mein <a href="/widerruf.html" target="_blank" rel="noopener">14-tägiges Widerrufsrecht</a> verliere.</span>
     </label>
     <button class="btn-buy" id="buy-btn-2" disabled>Meinen ersten Pinselstrich machen – 19 €</button>
     <p class="fineprint">Geld zurück, wenn's dir nichts bringt.</p>
+    <div class="buy-error" id="buy-error-2" role="alert" aria-live="polite"></div>
   </div>
 </section>
 
@@ -500,7 +615,7 @@ footer a:hover { text-decoration: underline; }
     <a href="/impressum.html">Impressum</a>
     <a href="/datenschutz.html">Datenschutz</a>
     <a href="/widerruf.html">Widerruf</a>
-    <a href="mailto:hallo@navo.de">Kontakt</a>
+    <a href="mailto:zekeriyahennouni15@gmail.com">Kontakt</a>
   </div>
 </footer>
 
@@ -519,12 +634,22 @@ form.addEventListener("submit", async (e) => {
   e.preventDefault();
   const idea = input.value.trim();
   if (!idea) return;
+  if (idea.length < 8) {
+    error.textContent = "Deine Idee ist zu kurz. Ein voller Satz reicht schon.";
+    return;
+  }
   currentIdea = idea;
   error.textContent = "";
   result.classList.remove("visible");
   buyBox.classList.remove("visible");
   checkBtn.disabled = true;
   checkBtn.innerHTML = '<span class="spinner"></span>navo denkt nach…';
+
+  // Cold-Start-Info: Wenn der Free-Tier-Server gerade aufwacht, dauert die erste Antwort bis 30 s.
+  // Erst nach 6 s zeigen, damit es bei schnellen Antworten nicht flackert.
+  const slowTimer = setTimeout(() => {
+    checkBtn.innerHTML = '<span class="spinner"></span>Server wacht auf – kann 20 s dauern…';
+  }, 6000);
 
   try {
     const res = await fetch("/api/check", {
@@ -542,15 +667,26 @@ form.addEventListener("submit", async (e) => {
   } catch (err) {
     error.textContent = err.message || "Etwas ist schiefgelaufen. Probier's gleich nochmal.";
   } finally {
+    clearTimeout(slowTimer);
     checkBtn.disabled = false;
-    checkBtn.textContent = "Zeig mir, was navo denkt";
+    checkBtn.textContent = "Idee kostenlos prüfen";
   }
 });
 
-async function startCheckout() {
+function showBuyError(msg) {
+  $("buy-error").textContent = msg;
+  $("buy-error-2").textContent = msg;
+}
+function clearBuyError() {
+  $("buy-error").textContent = "";
+  $("buy-error-2").textContent = "";
+}
+
+async function startCheckout(source) {
+  clearBuyError();
   const consentGiven = $("consent-1").checked || $("consent-2").checked;
   if (!consentGiven) {
-    alert("Bitte bestätige zuerst deine Zustimmung zum Widerrufsverzicht.");
+    showBuyError("Bitte bestätige zuerst deine Zustimmung zum Widerrufsverzicht.");
     return;
   }
   const btns = document.querySelectorAll("#buy-btn, #buy-btn-2");
@@ -565,7 +701,7 @@ async function startCheckout() {
     if (!res.ok || !data.url) throw new Error(data.error || "Fehler beim Bezahlvorgang");
     window.location.href = data.url;
   } catch (err) {
-    alert(err.message);
+    showBuyError(err.message);
     $("buy-btn").disabled = !$("consent-1").checked;
     $("buy-btn-2").disabled = !$("consent-2").checked;
     $("buy-btn").textContent = "Mein erster Pinselstrich – 19 €";
@@ -587,6 +723,20 @@ $("consent-2").addEventListener("change", (e) => {
 function escapeHtml(s) {
   return s.replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
 }
+
+// Scroll-Reveal: Elemente mit .reveal blenden sanft ein, sobald sie ins Bild scrollen.
+const revealObserver = new IntersectionObserver((entries) => {
+  for (const entry of entries) {
+    if (entry.isIntersecting) {
+      entry.target.classList.add("visible");
+      revealObserver.unobserve(entry.target);
+    }
+  }
+}, {
+  threshold: 0.15,
+  rootMargin: "0px 0px -60px 0px"
+});
+document.querySelectorAll(".reveal").forEach(el => revealObserver.observe(el));
 </script>
 
 </body>

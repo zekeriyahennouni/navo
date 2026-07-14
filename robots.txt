@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /erfolg.html
+
+Sitemap: https://navo-0cvg.onrender.com/sitemap.xml

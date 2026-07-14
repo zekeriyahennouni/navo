@@ -5,9 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>navo — Dein erster Pinselstrich</title>
 <meta name="theme-color" content="#123B2E">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.bunny.net">
+<link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
+<link href="https://fonts.bunny.net/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
   --green: #123B2E;
@@ -65,6 +67,10 @@ textarea, input {
 }
 textarea { min-height: 90px; }
 textarea:focus, input:focus { border-color: var(--green); }
+button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 2px;
+}
 button {
   font-family: inherit;
   font-size: 16px;
@@ -114,8 +120,33 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
   margin-right: 8px;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
-.footer-note {
+.closing {
   margin-top: 60px;
+  padding: 40px 32px;
+  background: var(--green);
+  color: var(--cream);
+  border-radius: 16px;
+  display: none;
+}
+.closing.visible { display: block; }
+.closing h2 {
+  color: var(--cream);
+  border: none;
+  padding: 0;
+  margin: 0 0 16px;
+  font-size: 26px;
+}
+.closing p { color: rgba(245,239,230,0.9); margin-bottom: 12px; }
+.closing p:last-child { margin-bottom: 0; }
+.closing .signature {
+  font-family: "Fraunces", Georgia, serif;
+  font-style: italic;
+  color: var(--cream);
+  margin-top: 20px;
+  font-size: 18px;
+}
+.footer-note {
+  margin-top: 32px;
   padding: 24px;
   background: var(--cream-dark);
   border-radius: 12px;
@@ -142,13 +173,21 @@ a { color: var(--green-soft); }
     <textarea id="angst" required maxlength="500" placeholder="Ehrlich, ohne Filter."></textarea>
 
     <button type="submit" id="submit-btn">Meinen Zug bekommen</button>
-    <div class="error" id="error"></div>
+    <div class="error" id="error" role="alert" aria-live="polite"></div>
   </form>
 
-  <div class="result" id="result"></div>
+  <div class="result" id="result" role="region" aria-live="polite" aria-label="Dein persönlicher Pinselstrich"></div>
+
+  <div class="closing" id="closing">
+    <h2>Und jetzt?</h2>
+    <p>Mach den Zug. Wirklich. Nicht „später", nicht „wenn ich Zeit habe" – sondern in den nächsten 20 Minuten.</p>
+    <p>Wenn er dir geholfen hat, komm gern zurück. Es gibt hier keine Autoresponder-Kette, keinen Newsletter, der dich verfolgt, kein Retargeting.</p>
+    <p>Aber wenn du mir eine kurze Mail schreibst, was du gemacht hast – schreib mir. Ich lese jede Mail selbst. Und ich lerne aus jeder.</p>
+    <p class="signature">— Zekeriya</p>
+  </div>
 
   <div class="footer-note">
-    <strong>Wenn navo dir nicht wirklich weiterhilft:</strong> Schreib mir eine kurze Mail an <a href="mailto:hallo@navo.de">hallo@navo.de</a> mit deiner Bestell-Referenz, und du bekommst dein Geld zurück. Kein Formular, kein Verhör.
+    <strong>Wenn navo dir nicht wirklich weiterhilft:</strong> Schreib mir eine kurze Mail an <a href="mailto:zekeriyahennouni15@gmail.com">zekeriyahennouni15@gmail.com</a> mit deiner Bestell-Referenz, und du bekommst dein Geld zurück. Kein Formular, kein Verhör.
   </div>
 </div>
 
@@ -177,6 +216,11 @@ form?.addEventListener("submit", async (e) => {
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner"></span>navo denkt nach…';
 
+  // Bei Cold-Start des Free-Tier-Servers dauert die Antwort länger. Nach 8 s Info zeigen.
+  const slowTimer = setTimeout(() => {
+    btn.innerHTML = '<span class="spinner"></span>Server wacht auf – kann bis zu 30 s dauern…';
+  }, 8000);
+
   try {
     const res = await fetch("/api/pinselstrich", {
       method: "POST",
@@ -187,10 +231,12 @@ form?.addEventListener("submit", async (e) => {
     if (!res.ok) throw new Error(data.error || "Fehler");
     resultBox.innerHTML = renderMarkdown(data.antwort);
     resultBox.classList.add("visible");
+    document.getElementById("closing").classList.add("visible");
     resultBox.scrollIntoView({ behavior: "smooth", block: "start" });
   } catch (err) {
     errorBox.textContent = err.message;
   } finally {
+    clearTimeout(slowTimer);
     btn.disabled = false;
     btn.textContent = "Meinen Zug bekommen";
   }
