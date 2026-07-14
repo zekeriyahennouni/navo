@@ -1,30 +1,52 @@
-# navo
+# navo V2
 
-Der Gründungs-Navigator für alle, die nicht mehr auf den perfekten Moment warten wollen.
+Persistenter Begleiter von der Idee bis zum ersten zahlenden Kunden.
+Einmaliger Kauf (39 €), Lifetime-Zugang, kein Abo.
 
-## Was hier drin ist
+## Architektur
 
-- `index.html` – Landingpage mit kostenlosem Ideen-Check und Kaufabschluss
-- `erfolg.html` – Erfolgsseite nach der Stripe-Zahlung, generiert den bezahlten Zug
-- `server.js` – Express-Backend mit drei API-Routen
-- `package.json` – Abhängigkeiten (Express + Stripe)
-- `.env.example` – Vorlage für die Umgebungsvariablen
+- **Frontend:** statische HTML-Seiten (`index.html`, `app.html`, `login.html`, Rechtsseiten)
+- **Backend:** Node.js + Express (`server.js`)
+- **DB:** Postgres via Neon (`db.js`)
+- **Auth:** Signed Session-Cookie + Magic-Link (per E-Mail via Resend)
+- **KI:** Anthropic Claude (persistente Konversation pro Nutzer)
+- **Zahlung:** Stripe Checkout
 
 ## Lokal starten
 
-1. `.env` aus `.env.example` kopieren und die drei Keys eintragen (Anthropic, Stripe, Basis-URL).
+1. `.env` aus `.env.example` erstellen, alle Keys eintragen (siehe `TODO.md`)
 2. `npm install`
 3. `npm start`
 4. Im Browser: `http://localhost:3000`
 
-## Nach der Zahlung
+Die Datenbank wird beim ersten Start automatisch initialisiert (Tabellen `users`, `messages`, `login_tokens`).
 
-Stripe leitet den Käufer auf `/erfolg.html?session_id=…`. Dort beantwortet er drei kurze Fragen. Der Server prüft die Zahlung bei Stripe und lässt navo den Zug generieren.
+## Nutzerfluss
 
-## Zu tun vor Live-Gang
+**Erstkauf:**
+1. Nutzer landet auf `/`, gibt Idee ein → kostenloser Ideen-Check
+2. Klick auf „Ich fang jetzt an – 39 €" → Widerrufsverzicht bestätigen → Stripe
+3. Nach Zahlung: `/erfolg?session_id=…` verifiziert die Zahlung serverseitig, legt Konto an, setzt Session-Cookie
+4. Redirect nach `/app` → Chat mit navo beginnt
 
-- Impressum (`impressum.html`) und Datenschutz (`datenschutz.html`) hinzufügen – rechtlich Pflicht in Deutschland.
-- Beim Kauf-Flow eine Checkbox einbauen: *„Ich stimme zu, dass die Leistung sofort beginnt und ich mein Widerrufsrecht verliere."* – sonst 14 Tage Widerrufsrecht auf digitale Produkte.
-- Persönlichen Absatz in `index.html` unter „Wer ist hinter navo?" ersetzen.
-- Live-Keys von Stripe holen und `.env` in Produktion setzen.
-- Testkauf durchführen (`4242 4242 4242 4242` im Stripe-Testmodus).
+**Rückkehr auf einem anderen Gerät:**
+1. Nutzer öffnet `/login`, gibt seine E-Mail ein
+2. Server verschickt Magic-Link (via Resend)
+3. Klick auf Link → `/login/verify?token=…` → Session-Cookie → `/app`
+
+## API-Endpunkte
+
+- `POST /api/check` – Kostenloser Ideen-Check (öffentlich, rate-limited)
+- `POST /api/checkout` – Startet Stripe-Session
+- `GET  /erfolg` – Nach Stripe: legt Konto an, loggt ein
+- `POST /api/login` – Verschickt Magic-Link
+- `GET  /login/verify` – Verifiziert Magic-Link, loggt ein
+- `POST /api/logout` – Löscht Session-Cookie
+- `GET  /api/me` – Konto-Info (Auth erforderlich)
+- `GET  /api/history` – Chat-Historie (Auth erforderlich)
+- `POST /api/chat` – Neue Nachricht an navo (Auth erforderlich)
+- `GET  /api/health` – Healthcheck
+
+## Deployment auf Render
+
+Siehe `TODO.md` für die exakte Schritt-für-Schritt-Anleitung.

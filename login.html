@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Einloggen — navo</title>
+<meta name="theme-color" content="#123B2E">
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
+<link href="https://fonts.bunny.net/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root { --green: #123B2E; --green-dark: #0b2b21; --cream: #F5EFE6; --cream-dark: #eee5d4; --ink: #1a1a1a; --ink-soft: #4a4a4a; --border: #e2d9c8; --muted: #8a8a8a; --danger: #a83a3a; }
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; min-height: 100vh; }
+body { background: var(--cream); color: var(--ink); font-family: "Inter", system-ui, sans-serif; font-size: 16px; line-height: 1.6; display: flex; align-items: center; justify-content: center; padding: 24px; }
+.wrap { max-width: 440px; width: 100%; }
+.logo { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-size: 24px; color: var(--green); text-decoration: none; display: block; text-align: center; margin-bottom: 24px; }
+.card { background: white; border: 1px solid var(--border); border-radius: 16px; padding: 32px; box-shadow: 0 8px 24px rgba(18,59,46,0.06); }
+h1 { font-family: "Fraunces", Georgia, serif; font-weight: 600; color: var(--green); font-size: 26px; margin: 0 0 12px; line-height: 1.2; }
+p { color: var(--ink-soft); margin: 0 0 20px; }
+label { display: block; font-weight: 600; color: var(--green); margin-bottom: 8px; font-size: 14px; }
+input[type="email"] { width: 100%; border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; font-family: inherit; font-size: 16px; background: white; color: var(--ink); outline: none; }
+input:focus { border-color: var(--green); }
+input:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+button { width: 100%; background: var(--green); color: var(--cream); font-family: inherit; font-size: 16px; font-weight: 600; border: none; padding: 14px 20px; border-radius: 999px; cursor: pointer; margin-top: 16px; transition: background 0.2s; }
+button:hover:not(:disabled) { background: var(--green-dark); }
+button:disabled { opacity: 0.5; cursor: not-allowed; }
+.notice { padding: 16px 20px; background: rgba(18,59,46,0.05); border-left: 3px solid var(--green); border-radius: 8px; color: var(--ink); font-size: 14px; margin-top: 20px; display: none; }
+.notice.visible { display: block; }
+.error { color: var(--danger); font-size: 14px; margin-top: 12px; min-height: 20px; }
+.fine { text-align: center; margin-top: 20px; font-size: 13px; color: var(--muted); }
+.fine a { color: var(--green); }
+.spinner { display: inline-block; width: 12px; height: 12px; border: 2px solid rgba(245,239,230,0.3); border-top-color: var(--cream); border-radius: 50%; animation: spin 0.8s linear infinite; vertical-align: middle; margin-right: 6px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="logo" href="/">navo</a>
+  <div class="card">
+    <h1>Willkommen zurück.</h1>
+    <p>Trag die E-Mail-Adresse ein, mit der du navo gekauft hast. Wir schicken dir einen Link zum Einloggen.</p>
+
+    <form id="form">
+      <label for="email">Deine E-Mail-Adresse</label>
+      <input type="email" id="email" required autocomplete="email" placeholder="du@example.de">
+      <button type="submit" id="btn">Login-Link schicken</button>
+      <div class="error" id="error" role="alert" aria-live="polite"></div>
+    </form>
+
+    <div class="notice" id="notice">
+      Wenn diese E-Mail bei uns ist, haben wir dir einen Login-Link geschickt. Schau in dein Postfach – der Link ist 20 Minuten gültig.
+    </div>
+  </div>
+
+  <p class="fine">Noch kein Konto? <a href="/">Zurück zur Startseite</a></p>
+</div>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const errParam = params.get("error");
+if (errParam) {
+  const map = {
+    missing: "Kein Login-Token gefunden. Bitte fordere einen neuen an.",
+    unknown: "Dieser Link ist ungültig.",
+    used: "Dieser Link wurde bereits verwendet. Fordere einen neuen an.",
+    expired: "Dieser Link ist abgelaufen. Fordere einen neuen an.",
+    server: "Etwas ist schiefgelaufen. Probier's gleich nochmal."
+  };
+  document.getElementById("error").textContent = map[errParam] || "Fehler.";
+}
+
+const form = document.getElementById("form");
+const btn = document.getElementById("btn");
+const errorEl = document.getElementById("error");
+const noticeEl = document.getElementById("notice");
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  errorEl.textContent = "";
+  const email = document.getElementById("email").value.trim();
+  if (!email) return;
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>Schicke Link…';
+  try {
+    const res = await fetch("/api/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "Fehler");
+    noticeEl.classList.add("visible");
+    form.style.display = "none";
+  } catch (err) {
+    errorEl.textContent = err.message;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Login-Link schicken";
+  }
+});
+</script>
+</body>
+</html>

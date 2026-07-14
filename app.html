@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>navo — Dein Begleiter</title>
+<meta name="theme-color" content="#123B2E">
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
+<link href="https://fonts.bunny.net/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green: #123B2E;
+  --green-dark: #0b2b21;
+  --green-soft: #1e5a45;
+  --cream: #F5EFE6;
+  --cream-dark: #eee5d4;
+  --ink: #1a1a1a;
+  --ink-soft: #4a4a4a;
+  --muted: #8a8a8a;
+  --border: #e2d9c8;
+  --shadow: 0 1px 2px rgba(0,0,0,0.04), 0 8px 24px rgba(18,59,46,0.06);
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; height: 100%; }
+body {
+  background: var(--cream);
+  color: var(--ink);
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+header {
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--border);
+  background: var(--cream);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.logo {
+  font-family: "Fraunces", Georgia, serif;
+  font-weight: 600;
+  font-size: 22px;
+  color: var(--green);
+  text-decoration: none;
+  letter-spacing: -0.01em;
+}
+.logout-btn {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-family: inherit;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 6px;
+}
+.logout-btn:hover { color: var(--green); background: var(--cream-dark); }
+
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  max-width: 720px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 20px 20px;
+}
+
+.messages {
+  flex: 1;
+  padding: 24px 0;
+  overflow-y: auto;
+}
+
+.msg {
+  margin-bottom: 20px;
+  animation: fade-in 0.3s ease-out;
+}
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+
+.msg-navo .bubble {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 16px 16px 16px 4px;
+  padding: 16px 20px;
+  color: var(--ink);
+  max-width: 100%;
+  box-shadow: var(--shadow);
+}
+.msg-navo .who {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 11px;
+  color: var(--green-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 6px;
+}
+
+.msg-user {
+  display: flex;
+  justify-content: flex-end;
+}
+.msg-user .bubble {
+  background: var(--green);
+  color: var(--cream);
+  border-radius: 16px 16px 4px 16px;
+  padding: 12px 18px;
+  max-width: 80%;
+}
+
+.bubble p { margin: 0 0 12px; }
+.bubble p:last-child { margin-bottom: 0; }
+.bubble h2, .bubble h3 {
+  font-family: "Fraunces", Georgia, serif;
+  color: var(--green);
+  font-size: 17px;
+  margin: 12px 0 6px;
+  line-height: 1.3;
+}
+.msg-navo .bubble h2:first-child, .msg-navo .bubble h3:first-child { margin-top: 0; }
+.bubble ol, .bubble ul { padding-left: 20px; margin: 8px 0; }
+.bubble li { margin-bottom: 4px; }
+.bubble strong { color: var(--green); font-weight: 600; }
+
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--muted);
+  font-family: "Fraunces", Georgia, serif;
+  font-style: italic;
+}
+
+.compose {
+  border-top: 1px solid var(--border);
+  padding: 16px 0;
+  background: var(--cream);
+  position: sticky;
+  bottom: 0;
+}
+.compose-inner {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: var(--shadow);
+}
+.compose textarea {
+  width: 100%;
+  border: none;
+  outline: none;
+  resize: none;
+  font-family: inherit;
+  font-size: 16px;
+  min-height: 44px;
+  max-height: 200px;
+  background: transparent;
+  color: var(--ink);
+  padding: 0;
+}
+.compose textarea::placeholder { color: var(--muted); }
+.compose .row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.hint {
+  font-size: 12px;
+  color: var(--muted);
+}
+button.send {
+  background: var(--green);
+  color: var(--cream);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+button.send:hover:not(:disabled) { background: var(--green-dark); }
+button.send:disabled { opacity: 0.5; cursor: not-allowed; }
+button:focus-visible, textarea:focus-visible, a:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 2px;
+}
+
+.spinner {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border: 2px solid rgba(245,239,230,0.3);
+  border-top-color: var(--cream);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.error-inline {
+  color: #a83a3a;
+  font-size: 13px;
+  margin-top: 8px;
+}
+
+.thinking {
+  padding: 12px 20px;
+  color: var(--green-soft);
+  font-style: italic;
+  font-size: 14px;
+  animation: fade-in 0.3s ease-out;
+}
+</style>
+</head>
+<body>
+<header>
+  <a class="logo" href="/">navo</a>
+  <button class="logout-btn" id="logout-btn">Abmelden</button>
+</header>
+
+<main>
+  <div class="messages" id="messages" aria-live="polite">
+    <div class="empty-state" id="empty-state">Lade Konversation…</div>
+  </div>
+
+  <div class="compose">
+    <div class="compose-inner">
+      <label for="input" class="sr-only" style="position:absolute;left:-9999px;">Nachricht an navo</label>
+      <textarea id="input" placeholder="Schreib navo, was seit letztem Mal passiert ist – oder frag was dich blockiert." rows="1"></textarea>
+      <div class="row">
+        <span class="hint">Enter zum Senden · Umschalt+Enter für neue Zeile</span>
+        <button class="send" id="send-btn">Senden</button>
+      </div>
+      <div class="error-inline" id="error"></div>
+    </div>
+  </div>
+</main>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const messagesEl = $("messages");
+const emptyEl = $("empty-state");
+const input = $("input");
+const sendBtn = $("send-btn");
+const errorEl = $("error");
+const logoutBtn = $("logout-btn");
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
+}
+
+function renderMarkdown(text) {
+  const lines = String(text).split("\n");
+  let html = "";
+  let inList = false;
+  let listType = null;
+  for (const raw of lines) {
+    const line = raw.trim();
+    if (!line) {
+      if (inList) { html += `</${listType}>`; inList = false; listType = null; }
+      continue;
+    }
+    if (line.startsWith("## ")) {
+      if (inList) { html += `</${listType}>`; inList = false; listType = null; }
+      html += `<h2>${escapeHtml(line.slice(3))}</h2>`;
+    } else if (line.startsWith("### ")) {
+      if (inList) { html += `</${listType}>`; inList = false; listType = null; }
+      html += `<h3>${escapeHtml(line.slice(4))}</h3>`;
+    } else if (/^\d+\.\s/.test(line)) {
+      if (!inList || listType !== "ol") {
+        if (inList) html += `</${listType}>`;
+        html += "<ol>"; inList = true; listType = "ol";
+      }
+      html += `<li>${escapeHtml(line.replace(/^\d+\.\s/, ""))}</li>`;
+    } else if (/^[-*]\s/.test(line)) {
+      if (!inList || listType !== "ul") {
+        if (inList) html += `</${listType}>`;
+        html += "<ul>"; inList = true; listType = "ul";
+      }
+      html += `<li>${escapeHtml(line.replace(/^[-*]\s/, ""))}</li>`;
+    } else {
+      if (inList) { html += `</${listType}>`; inList = false; listType = null; }
+      const emphasized = escapeHtml(line).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+      html += `<p>${emphasized}</p>`;
+    }
+  }
+  if (inList) html += `</${listType}>`;
+  return html;
+}
+
+function appendMessage(role, content) {
+  if (emptyEl && emptyEl.parentNode) emptyEl.remove();
+  const el = document.createElement("div");
+  el.className = "msg " + (role === "user" ? "msg-user" : "msg-navo");
+  if (role === "assistant") {
+    el.innerHTML = `<div class="who">navo</div><div class="bubble">${renderMarkdown(content)}</div>`;
+  } else {
+    el.innerHTML = `<div class="bubble">${escapeHtml(content).replace(/\n/g, "<br>")}</div>`;
+  }
+  messagesEl.appendChild(el);
+  window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+}
+
+function showThinking() {
+  const el = document.createElement("div");
+  el.className = "thinking";
+  el.id = "thinking";
+  el.textContent = "navo denkt nach…";
+  messagesEl.appendChild(el);
+  window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+}
+function hideThinking() {
+  const el = document.getElementById("thinking");
+  if (el) el.remove();
+}
+
+async function loadHistory() {
+  try {
+    const res = await fetch("/api/history");
+    if (res.status === 401 || res.status === 402) {
+      window.location.href = "/login";
+      return;
+    }
+    const data = await res.json();
+    if (data.messages && data.messages.length > 0) {
+      if (emptyEl && emptyEl.parentNode) emptyEl.remove();
+      for (const m of data.messages) {
+        appendMessage(m.role, m.content);
+      }
+    } else {
+      if (emptyEl) emptyEl.textContent = "Willkommen. Schreib navo, wo du gerade stehst — oder was du seit dem Kauf gedacht hast.";
+    }
+  } catch (err) {
+    if (emptyEl) emptyEl.textContent = "Konnte Verlauf nicht laden. Lade die Seite bitte neu.";
+  }
+}
+
+async function send() {
+  const text = input.value.trim();
+  if (!text) return;
+  errorEl.textContent = "";
+  appendMessage("user", text);
+  input.value = "";
+  input.style.height = "auto";
+  sendBtn.disabled = true;
+  sendBtn.innerHTML = '<span class="spinner"></span>senden…';
+  showThinking();
+  try {
+    const res = await fetch("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: text })
+    });
+    hideThinking();
+    if (res.status === 401 || res.status === 402) {
+      window.location.href = "/login";
+      return;
+    }
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "Fehler");
+    appendMessage("assistant", data.antwort);
+  } catch (err) {
+    hideThinking();
+    errorEl.textContent = err.message || "Etwas ist schiefgelaufen. Probier's gleich nochmal.";
+  } finally {
+    sendBtn.disabled = false;
+    sendBtn.textContent = "Senden";
+    input.focus();
+  }
+}
+
+sendBtn.addEventListener("click", send);
+input.addEventListener("keydown", (e) => {
+  if (e.key === "Enter" && !e.shiftKey) {
+    e.preventDefault();
+    send();
+  }
+});
+input.addEventListener("input", () => {
+  input.style.height = "auto";
+  input.style.height = Math.min(input.scrollHeight, 200) + "px";
+});
+logoutBtn.addEventListener("click", async () => {
+  await fetch("/api/logout", { method: "POST" });
+  window.location.href = "/";
+});
+
+loadHistory();
+</script>
+</body>
+</html>
