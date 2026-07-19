@@ -145,10 +145,23 @@ const checkoutLimiter = rateLimit({ max: 5, windowMs: 60_000 });
 const chatLimiter = rateLimit({ max: 30, windowMs: 60_000 });
 const loginLimiter = rateLimit({ max: 5, windowMs: 300_000 });
 
+// Erlaubte Herkuenfte fuer API-Aufrufe. Waehrend der Domain-Umstellung koennen mehrere erlaubt sein.
+// - PUBLIC_BASE_URL: die offizielle Adresse
+// - RENDER_EXTERNAL_URL: setzt Render automatisch (z.B. navo-0cvg.onrender.com), damit die alte Adresse waehrend Uebergangszeit weiter funktioniert
+// - ALLOWED_ORIGINS: optional, komma-separiert fuer weitere manuelle Origins
+const ALLOWED_ORIGINS = [
+  BASE_URL,
+  process.env.RENDER_EXTERNAL_URL,
+  ...(process.env.ALLOWED_ORIGINS || "").split(",").map(s => s.trim()).filter(Boolean),
+]
+  .filter(Boolean)
+  .map(u => u.replace(/\/$/, ""));
+
 function checkOrigin(req, res, next) {
   if (BASE_URL.startsWith("http://localhost")) return next();
   const origin = req.get("origin") || req.get("referer") || "";
-  if (!origin.startsWith(BASE_URL)) return res.status(403).json({ error: "Ungueltige Herkunft." });
+  const ok = ALLOWED_ORIGINS.some(allowed => allowed && origin.startsWith(allowed));
+  if (!ok) return res.status(403).json({ error: "Ungueltige Herkunft." });
   next();
 }
 
