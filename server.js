@@ -160,6 +160,18 @@ const ALLOWED_ORIGINS = [
 function checkOrigin(req, res, next) {
   if (BASE_URL.startsWith("http://localhost")) return next();
   const origin = req.get("origin") || req.get("referer") || "";
+
+  // Same-Host-Regel: Wenn die Anfrage aus derselben Domain kommt wie der Server gerade laeuft,
+  // ist sie immer erlaubt. Das funktioniert automatisch – egal ob Render-URL, Custom Domain, oder www.
+  const host = req.get("host");
+  if (host && origin) {
+    try {
+      const originHost = new URL(origin).host;
+      if (originHost === host) return next();
+    } catch (_) {}
+  }
+
+  // Zusaetzlich: explizit erlaubte externe Origins (aus ENV konfiguriert).
   const ok = ALLOWED_ORIGINS.some(allowed => allowed && origin.startsWith(allowed));
   if (!ok) return res.status(403).json({ error: "Ungueltige Herkunft." });
   next();
